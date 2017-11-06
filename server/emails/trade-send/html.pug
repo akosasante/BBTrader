@@ -1,0 +1,49 @@
+doctype html
+html
+    head
+        block head
+            meta(charset="utf-8")
+            meta(name="viewport", content="width=device-width")
+            meta(http-equiv="X-UA-Compatible", content="IE=edge")
+            meta(name="x-apple-disable-message-reformatting")
+            title= subject
+            link(rel="stylesheet", href="./trade-submit/trade-submit.css", data-inline)
+
+h3.mail-header #{sender}, all participants of the trade have submitted their confirmations:
+
+.mail-container
+    each trade in tradeData
+        .mail-title
+            strong From:
+            p #{trade.sender.name}
+        .divTable.blueTable
+            .divTableRow
+                .divTableHead
+                    strong Players
+                if trade.players.length > 0
+                    each player in trade.players
+                        .divTableCell.
+                            #{player.player} #[em to] #{player.rec.name}
+                else
+                    .divTableCell None
+            .divTableRow
+                .divTableHead
+                    strong Prospects
+                if trade.prospects.length > 0
+                    each prospect in trade.prospects
+                        .divTableCell.
+                            #{prospect.prospect} #[em to] #{prospect.rec.name}
+                else
+                    .divTableCell None
+            .divTableRow
+                .divTableHead
+                    strong Picks
+                if trade.picks.length > 0
+                    each pick in trade.picks
+                        .divTableCell.
+                            #[strong Round: ] #{pick.round}, #[strong Pick: ] #{pick.pick} #[em to] #{pick.rec.name}
+                else
+                    .divTableCell None
+    a.link-button(href=`${url}`) Click here to confirm the trade.
+    p
+        strong ** Just for testing **

@@ -1,0 +1,40 @@
+| #{sender} requested the following trade involving you #{recipient}:
+|
+each trade in tradeData
+    |
+    | From: #{trade.sender}
+    |
+    | Players:
+    if trade.players.length > 0
+        each player in trade.players
+            | #{player.player} to #{player.rec}
+            |
+    else
+        | None
+        |
+    |
+    | Prospects:
+    if trade.prospects.length > 0
+        each prospect in trade.prospects
+            | #{prospect.prospect} to #{prospect.rec}
+            |
+    else
+        | None
+        |
+    |
+    | Picks:
+    if trade.picks.length > 0
+        each pick in trade.picks
+            |  Round #{pick.round}, Pick #{pick.pick} to #{pick.rec}
+            |
+    else
+        | None
+        |
+    
+    |
+    |_____________________
+    |
+|
+|
+|Go to this link to confirm the above trade details: #{url}
+|

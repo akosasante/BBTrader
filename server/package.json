@@ -1,0 +1,31 @@
+{
+  "name": "bbtrades-server",
+  "version": "1.0.0",
+  "description": "Node/Express/Mongo backend for bbtrades",
+  "main": "server.js",
+  "dependencies": {
+    "@slack/client": "^3.14.1",
+    "bluebird": "^3.5.1",
+    "cors": "^2.8.4",
+    "email-templates": "^3.1.6",
+    "express": "^4.16.2",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.12.6",
+    "morgan": "^1.9.0",
+    "node-sass": "^4.5.3",
+    "nodemailer": "^4.3.1",
+    "nodemailer-sendinblue-transport": "^1.2.3",
+    "slackbots": "^1.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.10.0",
+    "nodemon": "^1.12.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "devStart": "NODE_ENV=development nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
