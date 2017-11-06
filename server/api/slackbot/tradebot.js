@@ -3,7 +3,6 @@
 //Bot
 const RtmClient = require('@slack/client').RtmClient;
 const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
-const bot_token = "xoxb-267358278722-yzaLfqFjoqO6fp91bpVozfn8";
 const TradeBot = new RtmClient(bot_token);
 
 // The client will emit an RTM.AUTHENTICATED event on successful connection, with the `rtm.start` payload
