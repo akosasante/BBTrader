@@ -1,7 +1,7 @@
 <template>
 <div class="trade-submit">
   <div class="trade-submit__container">
-    Select if two- or three-player trade:
+    Select number of participants in this trade:
     <player-switch @num-players-changed="updateNumPlayers"></player-switch>
     <div class="trade-submit__dropdowns">
       <player-select :playerNo="0" :players="availPlayers" @selected-player="updatePlayer"></player-select>
@@ -48,8 +48,9 @@ export default {
       this.selectedPlayers= this.selectedPlayers.slice();
     },
     submitTrade() {
-      console.log(TradeStore.data)
-      axios.post('http://159.203.5.13/mailer/tradeRequest', [TradeStore.data, this.selectedPlayers])
+      // console.log(TradeStore.data)
+      console.log(this);
+      this.$http.post(`/mailer/tradeRequest`, [TradeStore.data, this.selectedPlayers])
         .then(resp => {
           this.$snackbar.open({
             message: "Trade has been requested and emails sent to the other participants!",
@@ -91,7 +92,7 @@ export default {
 
 .trade-submit__dropdowns {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   max-width: 80vw;
 }
 

@@ -103,7 +103,7 @@ export default {
         const player = this.playerTo;
         const trade = { player: this.inputtedPlayer, rec: player };
         
-        console.log(trade);
+        // console.log(trade);
         this.players.push(trade);
         updateSavedData(this.player, "players", this.players);        
       }

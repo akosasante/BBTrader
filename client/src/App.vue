@@ -20,14 +20,17 @@
 </script>
 
 <style>
-	#app {
+	html {
 		background: #fafafa;
+	}
+	#app {
 		font-family: 'Avenir', Helvetica, Arial, sans-serif;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 		color: #2c3e50;
 		display: flex;
 		flex-direction: column;
+		min-height: 100vh;
 	}
 	#app.tradeSubmit {
 		border-top: 0.7rem solid #ff3860;

@@ -18,11 +18,13 @@
 </template>
 
 <script>
-import axios from 'axios';
+
+const example = [{"_id":"59ff80267b1e4835f36984a2","sender":"cam","__v":0,"picks":[],"prospects":[],"players":[{"player":"fsfdsfs","rec":"mike","_id":"59ff80267b1e4835f36984a4"},{"player":"fsdfsf","rec":"john","_id":"59ff80267b1e4835f36984a3"}]},{"_id":"59ff80267b1e4835f36984a5","sender":"mike","__v":0,"picks":[],"prospects":[{"prospect":"sdfdsfdf","rec":"cam","_id":"59ff80267b1e4835f36984a6"}],"players":[{"player":"sfdsfs","rec":"john","_id":"59ff80267b1e4835f36984a7"}]},{"_id":"59ff80267b1e4835f36984a8","sender":"john","__v":0,"picks":[{"pick":"john","round":17,"rec":"cam","_id":"59ff80267b1e4835f36984a9"}],"prospects":[],"players":[{"player":"sfdsfs","rec":"mike","_id":"59ff80267b1e4835f36984aa"}]}];
+
 
 async function fetchTrade(tradeIds) {
   try {
-    const resp = await axios.post("http://159.203.5.13/models/getTrade", tradeIds);
+    const resp = await this.$http.post(`/models/getTrade`, tradeIds);
     // console.log(resp);
     return resp.data.response;
   } catch(err) {
@@ -31,7 +33,6 @@ async function fetchTrade(tradeIds) {
   }
 };
 
-const example = [{"_id":"59ff80267b1e4835f36984a2","sender":"cam","__v":0,"picks":[],"prospects":[],"players":[{"player":"fsfdsfs","rec":"mike","_id":"59ff80267b1e4835f36984a4"},{"player":"fsdfsf","rec":"john","_id":"59ff80267b1e4835f36984a3"}]},{"_id":"59ff80267b1e4835f36984a5","sender":"mike","__v":0,"picks":[],"prospects":[{"prospect":"sdfdsfdf","rec":"cam","_id":"59ff80267b1e4835f36984a6"}],"players":[{"player":"sfdsfs","rec":"john","_id":"59ff80267b1e4835f36984a7"}]},{"_id":"59ff80267b1e4835f36984a8","sender":"john","__v":0,"picks":[{"pick":"john","round":17,"rec":"cam","_id":"59ff80267b1e4835f36984a9"}],"prospects":[],"players":[{"player":"sfdsfs","rec":"mike","_id":"59ff80267b1e4835f36984aa"}]}];
 export default {
   name: 'trade-confirm',
   data() {
@@ -41,16 +42,16 @@ export default {
     };
   },
   created() {
-    const promisedTrades = fetchTrade(this.$route.query);
-        promisedTrades.then((result) => {
-          this.trades = result
-          console.log(this.trades);
-        });
+    const promisedTrades = fetchTrade.bind(this, this.$route.query);
+    promisedTrades().then((result) => {
+      this.trades = result
+      // console.log(this.trades);
+    });
   },
   methods: {
     confirmTrade() {
       const confirmationData = { recip: this.recipient, trades: this.trades };
-      axios.post("http://159.203.5.13/models/updateConfirmation", confirmationData)
+      this.$http.post(`/models/updateConfirmation`, confirmationData)
         .then(resp => {
           console.log(resp);
           this.$snackbar.open({

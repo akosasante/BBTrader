@@ -5,9 +5,12 @@ import App from './App.vue'
 import Buefy from 'buefy'
 import 'buefy/lib/buefy.css'
 import router from './router'
+import axios from 'axios'
 
 Vue.config.productionTip = false
 Vue.use(Buefy)
+
+Vue.prototype.$http = axios
 
 /* eslint-disable no-new */
 new Vue({
@@ -16,3 +19,4 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
+

@@ -1,7 +1,9 @@
 <template>
 <div>
-{{ threePlayers ? "3 Player Trade" : "2 Player Trade" }}
-  <b-switch v-model="threePlayers" @input="updateNumPlayers"></b-switch>
+  <b-field>
+    <b-radio-button type="is-primary" v-model="numTeams" native-value="2" @input="updateNumPlayers"><span>2-Team Trade</span></b-radio-button>
+    <b-radio-button type="is-primary" v-model="numTeams" native-value="3" @input="updateNumPlayers"><span>3-Team Trade</span></b-radio-button>
+  </b-field>
 </div>
 </template>
 
@@ -10,12 +12,12 @@ export default {
   name: 'player-switch',
   data() {
     return {
-      threePlayers: false
+      numTeams: "2"
       }
   },
   methods: {
     updateNumPlayers(val) {
-      this.$emit('num-players-changed', !val ? 2 : 3);
+      this.$emit('num-players-changed', Number(this.numTeams));
     }
   }
 
