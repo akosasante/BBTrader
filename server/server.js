@@ -6,8 +6,8 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
+require('dotenv').config({path: './config/.env'});
 global.Promise = require('bluebird');
-require('dotenv').config();
 const app = express();
 
 //Database

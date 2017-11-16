@@ -64,7 +64,7 @@ module.exports.sendTradeMessage = async function(data, cb) {
         *Prospects:* ${prospectsText}
         *Picks:* ${picksText}`;
     });
-    console.log('\x1b[45m', 'T', text);
+    console.log('\x1b[41m', 'T', text);
     TradeBot.start();
     TradeBot.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function () {
         console.log('CONNECTED TO SLACK');

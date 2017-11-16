@@ -13,10 +13,10 @@ const modelController = require('../schemas/controller.js');
 
 //TODO: Remove api key
 const smtpOptions = {
-    apiKey: '0V1NsY9MqXgmwC2R'
+    apiKey: process.env.EMAIL_KEY
 };
 const transporter = nodemailer.createTransport(sendinBlue(smtpOptions));
-const domain = process.env.domain;
+const domain = process.env.DOMAIN;
 
 module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData) {
     const senderName = membersMap[sender];
@@ -88,8 +88,7 @@ function sendTradeRequestMail(sender, recipient, tradeData, tradeIds) {
     tradeIds.forEach((id, indx) => {
         url += `${indx}=${id}&`;
     });
-
-
+    console.log(url);
     const sendInfo = {
         from: sender.email,
         to: recipient.email,
