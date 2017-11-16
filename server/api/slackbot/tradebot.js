@@ -1,17 +1,17 @@
-"use strict";
+'use strict';
 
 //Bot
 const RtmClient = require('@slack/client').RtmClient;
 const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
-const bot_token = "xoxb-267358278722-yzaLfqFjoqO6fp91bpVozfn8";
+const bot_token = process.env.SLACK_BOT_TOKEN;
 const TradeBot = new RtmClient(bot_token);
 
 // The client will emit an RTM.AUTHENTICATED event on successful connection, with the `rtm.start` payload
 TradeBot.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
-  for (const c of rtmStartData.channels) {
-      if (c.is_member && c.name ==='general') { channel = c.id }
-  }
-  console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}, but not yet connected to a channel`);
+    for (const c of rtmStartData.channels) {
+        if (c.is_member && c.name ==='general') { channel = c.id; }
+    }
+    console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}, but not yet connected to a channel`);
 });
  
 // // you need to wait for the client to fully connect before you can send messages

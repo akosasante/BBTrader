@@ -43,6 +43,19 @@ module.exports.getUsername = function(userId) {
         });
 };
 
+module.exports.getEmail = function(userId) {
+    console.log(userId);
+    return Player.findById(userId)
+        .then(result => {
+            console.log('RESULT!: ', result);
+            return result;
+        })
+        .catch(error => {
+            console.log(error);
+            return null;
+        });
+};
+
 module.exports.getUserId = function(playerId) {
     return Player.findById(playerId, {userId: true})
         .then(result => {

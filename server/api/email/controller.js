@@ -9,6 +9,7 @@ const TradeEmail = require('../schemas/tradeEmail');
 const EmailTemplate = require('email-templates');
 const path = require('path');
 const membersMap = require('../../config/members').idToName;
+const modelController = require('../schemas/controller.js');
 
 //TODO: Remove api key
 const smtpOptions = {
@@ -20,16 +21,26 @@ const mailOptions = {
 const transporter = nodemailer.createTransport(sendinBlue(smtpOptions));
 const domain = 'http://0.0.0.0:3000';
 
-module.exports.sendValidationEmail = function(sender, tradeIds, tradeData) {
+module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData) {
     const senderName = membersMap[sender];
+    let senderEmail;
+    try {
+        const senderObj = await modelController.getEmail(sender);
+        senderEmail = senderObj.email;
+        console.log('\x1b[41m', 'VALIDATION SENDER', senderEmail);        
+    } catch(emailError) {
+        console.log(emailError);
+        return null;
+    }
+    
     console.log('\x1b[45m', tradeData);
     let url = `${domain}/send/${sender}?`;
     tradeIds.forEach((id, indx) => {
         url += `${indx}=${id}&`;
     });
     const sendInfo = {
-        from: 'tripleabatt@gmail.com',
-        to: 'tripleabatt@gmail.com',
+        from: 'tripleabatt+fftrades@gmail.com',
+        to: senderEmail,
     };
     const email = new EmailTemplate({
         message: sendInfo,
@@ -57,6 +68,7 @@ module.exports.sendValidationEmail = function(sender, tradeIds, tradeData) {
 
 function sendTradeRequestMail(sender, recipient, tradeData, tradeIds) {
     const namedTradeData = tradeData.map(trade => {
+        console.log('TRADEREQUEST: ', recipient);
         const senderName = membersMap[trade.sender];
         const players = trade.players.map(player => {
             const newPlayer = { _id: player._id, player: player.player, rec: membersMap[player.rec] };
@@ -80,8 +92,8 @@ function sendTradeRequestMail(sender, recipient, tradeData, tradeIds) {
         url += `${indx}=${id}&`;
     });
     const sendInfo = {
-        from: 'tripleabatt@gmail.com', //sender.email
-        to: 'tripleabatt@gmail.com',  //recipient.email
+        from: sender.email,
+        to: recipient.email,
     };
     const email = new EmailTemplate({
         message: sendInfo,
