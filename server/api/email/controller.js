@@ -9,21 +9,16 @@ const TradeEmail = require('../schemas/tradeEmail');
 const EmailTemplate = require('email-templates');
 const path = require('path');
 const membersMap = require('../../config/members').idToName;
-const modelController = require("../schemas/controller.js");
+const modelController = require('../schemas/controller.js');
 
 //TODO: Remove api key
 const smtpOptions = {
     apiKey: '0V1NsY9MqXgmwC2R'
 };
-const mailOptions = {
-    subject: 'Baseball Trade'
-};
 const transporter = nodemailer.createTransport(sendinBlue(smtpOptions));
-const domain = 'http://159.203.5.13';
+const domain = process.env.domain;
 
 module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData) {
-console.log("time to validate");
-console.log(sender);
     const senderName = membersMap[sender];
     let senderEmail;
     try {
@@ -34,6 +29,7 @@ console.log(sender);
         console.log(emailError);
         return null;
     }
+    
     console.log('\x1b[45m', tradeData);
     let url = `${domain}/send/${sender}?`;
     tradeIds.forEach((id, indx) => {
@@ -69,6 +65,7 @@ console.log(sender);
 
 function sendTradeRequestMail(sender, recipient, tradeData, tradeIds) {
     const namedTradeData = tradeData.map(trade => {
+        console.log('TRADEREQUEST: ', recipient);
         const senderName = membersMap[trade.sender];
         const players = trade.players.map(player => {
             const newPlayer = { _id: player._id, player: player.player, rec: membersMap[player.rec] };
@@ -94,8 +91,8 @@ function sendTradeRequestMail(sender, recipient, tradeData, tradeIds) {
 
 
     const sendInfo = {
-        from: sender.email, //sender.email
-        to: recipient.email  //recipient.email
+        from: sender.email,
+        to: recipient.email,
     };
     const email = new EmailTemplate({
         message: sendInfo,

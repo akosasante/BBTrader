@@ -7,11 +7,11 @@ const logger = require('morgan');
 const cors = require('cors');
 
 global.Promise = require('bluebird');
+require('dotenv').config();
 const app = express();
 
 //Database
-const db = require('./config/db');
-const dbUrl = process.env.NODE_ENV === 'development' ? db.devurl : db.url;
+const dbUrl = process.env.NODE_ENV === 'development' ? process.env.DB_DEV : process.env.DB_PROD;
 mongoose.connect(dbUrl, {useMongoClient: true});
 
 //Logging
