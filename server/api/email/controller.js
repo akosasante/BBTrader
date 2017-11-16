@@ -19,7 +19,7 @@ const mailOptions = {
     subject: 'Baseball Trade'
 };
 const transporter = nodemailer.createTransport(sendinBlue(smtpOptions));
-const domain = 'http://0.0.0.0:3000';
+const domain = process.env.domain;
 
 module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData) {
     const senderName = membersMap[sender];
