@@ -23,7 +23,7 @@ const example = [{"_id":"59ff80267b1e4835f36984a2","sender":"cam","__v":0,"picks
 
 async function fetchTrade(tradeIds) {
   try {
-    const resp = await axios.post("http://0.0.0.0:3000/models/getTrade", tradeIds);
+    const resp = await axios.post("http://159.203.5.13/models/getTrade", tradeIds);
     // console.log(resp);
     return resp.data.response;
   } catch(err) {
@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     sendToSlack() {
-      axios.post("http://0.0.0.0:3000/tradebot/postTrade", {trades: this.trades, sender: this.$route.params.sender})
+      axios.post("http://159.203.5.13/tradebot/postTrade", {trades: this.trades, sender: this.$route.params.sender})
         .then(resp => {
           console.log(resp);
           this.$snackbar.open({

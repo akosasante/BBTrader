@@ -22,7 +22,7 @@ import axios from 'axios';
 
 async function fetchTrade(tradeIds) {
   try {
-    const resp = await axios.post("http://0.0.0.0:3000/models/getTrade", tradeIds);
+    const resp = await axios.post("http://159.203.5.13/models/getTrade", tradeIds);
     // console.log(resp);
     return resp.data.response;
   } catch(err) {
@@ -50,7 +50,7 @@ export default {
   methods: {
     confirmTrade() {
       const confirmationData = { recip: this.recipient, trades: this.trades };
-      axios.post("http://0.0.0.0:3000/models/updateConfirmation", confirmationData)
+      axios.post("http://159.203.5.13/models/updateConfirmation", confirmationData)
         .then(resp => {
           console.log(resp);
           this.$snackbar.open({

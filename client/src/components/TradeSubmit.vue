@@ -49,7 +49,7 @@ export default {
     },
     submitTrade() {
       console.log(TradeStore.data)
-      axios.post('http://0.0.0.0:3000/mailer/tradeRequest', [TradeStore.data, this.selectedPlayers])
+      axios.post('http://159.203.5.13/mailer/tradeRequest', [TradeStore.data, this.selectedPlayers])
         .then(resp => {
           this.$snackbar.open({
             message: "Trade has been requested and emails sent to the other participants!",

@@ -9,6 +9,7 @@ const TradeEmail = require('../schemas/tradeEmail');
 const EmailTemplate = require('email-templates');
 const path = require('path');
 const membersMap = require('../../config/members').idToName;
+const modelController = require("../schemas/controller.js");
 
 //TODO: Remove api key
 const smtpOptions = {
@@ -18,23 +19,34 @@ const mailOptions = {
     subject: 'Baseball Trade'
 };
 const transporter = nodemailer.createTransport(sendinBlue(smtpOptions));
-const domain = 'http://0.0.0.0:3000';
+const domain = 'http://159.203.5.13';
 
-module.exports.sendValidationEmail = function(sender, tradeIds, tradeData) {
+module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData) {
+console.log("time to validate");
+console.log(sender);
     const senderName = membersMap[sender];
+    let senderEmail;
+    try {
+        const senderObj = await modelController.getEmail(sender);
+        senderEmail = senderObj.email;
+        console.log('\x1b[41m', 'VALIDATION SENDER', senderEmail);        
+    } catch(emailError) {
+        console.log(emailError);
+        return null;
+    }
     console.log('\x1b[45m', tradeData);
     let url = `${domain}/send/${sender}?`;
     tradeIds.forEach((id, indx) => {
         url += `${indx}=${id}&`;
     });
     const sendInfo = {
-        from: 'tripleabatt@gmail.com',
-        to: 'tripleabatt@gmail.com',
+        from: 'tripleabatt+fftrades@gmail.com',
+        to: senderEmail,
     };
     const email = new EmailTemplate({
         message: sendInfo,
         transport: transporter,
-        preview: true,
+        preview: false,
         send: true,
         juice: true,
         juiceResources: {
@@ -79,14 +91,16 @@ function sendTradeRequestMail(sender, recipient, tradeData, tradeIds) {
     tradeIds.forEach((id, indx) => {
         url += `${indx}=${id}&`;
     });
+
+
     const sendInfo = {
-        from: 'tripleabatt@gmail.com', //sender.email
-        to: 'tripleabatt@gmail.com',  //recipient.email
+        from: sender.email, //sender.email
+        to: recipient.email  //recipient.email
     };
     const email = new EmailTemplate({
         message: sendInfo,
         transport: transporter,
-        preview: true,
+        preview: false,
         send: true,
         juice: true,
         juiceResources: {

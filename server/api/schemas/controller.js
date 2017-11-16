@@ -16,6 +16,7 @@ module.exports.getTrade = function(data, cb) {
         { path: 'picks.rec', model: 'Player' },
         { path: 'sender', model: 'Player' },
     ];
+console.log(tradeIds);
     Trade.find({
         '_id': { $in : tradeIds }
     }).then(async results => {
@@ -35,6 +36,19 @@ module.exports.getTrade = function(data, cb) {
 module.exports.getUsername = function(userId) {
     return Player.findById(userId, {username: true})
         .then(result => {
+            return result;
+        })
+        .catch(error => {
+            console.log(error);
+            return null;
+        });
+};
+
+module.exports.getEmail = function(userId) {
+    console.log(userId);
+    return Player.findById(userId)
+        .then(result => {
+            console.log('RESULT!: ', result);
             return result;
         })
         .catch(error => {
