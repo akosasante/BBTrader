@@ -18,6 +18,63 @@ const smtpOptions = {
 const transporter = nodemailer.createTransport(sendinBlue(smtpOptions));
 const domain = process.env.DOMAIN;
 
+module.exports.sendPasswordResetEmail = async function(savedUser) {
+    const url = `${domain}/auth/reset/${savedUser.resetPasswordToken}`;
+    const email = new EmailTemplate({
+        message: {
+            from: 'tripleabatt+fftradesadmin@gmail.com',
+            to: savedUser.email
+        },
+        transport: transporter,
+        preview: true,
+        send: false,
+        juice: true,
+        juiceResources: {
+            preserveImportant: true,
+            webResources: {
+                relativeTo: path.resolve('emails')
+            }
+        },
+        htmlToText: false
+    });
+
+    return email.send({
+        template: 'forgot-password',
+        locals: {
+            sender: savedUser.name,
+            url: url
+        }
+    });
+};
+
+module.exports.sendPasswordConfirmEmail = async function(savedUser) {
+    const email = new EmailTemplate({
+        message: {
+            from: 'tripleabatt+fftradesadmin@gmail.com',
+            to: savedUser.email
+        },
+        transport: transporter,
+        preview: true,
+        send: false,
+        juice: true,
+        juiceResources: {
+            preserveImportant: true,
+            webResources: {
+                relativeTo: path.resolve('emails')
+            }
+        },
+        htmlToText: false
+    });
+
+    return email.send({
+        template: 'confirm-reset-password',
+        locals: {
+            sender: savedUser.name,
+            email: savedUser.email
+        }
+    });
+};
+
 module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData) {
     const senderName = membersMap[sender];
     let senderEmail;
@@ -36,7 +93,7 @@ module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData)
         url += `${indx}=${id}&`;
     });
     const sendInfo = {
-        from: 'tripleabatt+fftrades@gmail.com',
+        from: 'tripleabatt+fftradesadmin@gmail.com',
         to: senderEmail,
     };
     const email = new EmailTemplate({

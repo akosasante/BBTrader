@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const passport = require('passport');
 
 require('dotenv').config({path: './config/.env'});
 global.Promise = require('bluebird');
@@ -26,6 +27,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //CORS
 app.use(cors());
+
+//auth initialization and routes
+require('./auth/passport')(passport);
+app.use(passport.initialize());
+require('./auth')(app, passport);
 
 //API Routes
 require('./api')(app);

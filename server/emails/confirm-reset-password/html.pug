@@ -1,0 +1,13 @@
+doctype html
+html
+    head
+        block head
+            meta(charset="utf-8")
+            meta(name="viewport", content="width=device-width")
+            meta(http-equiv="X-UA-Compatible", content="IE=edge")
+            meta(name="x-apple-disable-message-reformatting")
+            title= subject
+            link(rel="stylesheet", href="./forgot-password/forgot-password.css", data-inline)
+    body
+        p #{sender}, this is confirmation that the password for your account #{email} has just been changed.
+        p ** Just for testing **
