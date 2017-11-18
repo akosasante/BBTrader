@@ -12,9 +12,16 @@
       <player-trade :num-players="numPlayers" :all-players="allPlayers" :all-traders="selectedPlayers" :player="selectedPlayers[0]"></player-trade>
       <player-trade :num-players="numPlayers" :all-players="allPlayers" :all-traders="selectedPlayers" :player="selectedPlayers[1]"></player-trade>
       <player-trade :num-players="numPlayers" :all-players="allPlayers" :all-traders="selectedPlayers" :player="selectedPlayers[2]" v-if="selectedPlayers[2]"></player-trade>
-      <b-tooltip class="tooltip__trade-submit" animated multilined position="is-bottom" label="This will send the above trade information to the selected users">
-        <button class="button is-dark btn__trade-submit" @click="submitTrade">Submit Trade</button>
-      </b-tooltip>
+      <div class="button-container">
+        <b-tooltip class="tooltip__trade-submit" animated multilined position="is-bottom" label="This will send the above trade information to the selected users">
+          <button v-show="!loading" v-bind:class="{ 'is-success': successLoading, 'is-dark' : !loadingComplete, 'is-danger': errorLoading}" class="button btn__trade-submit" @click="submitTrade" :disabled="successLoading">
+            <span style="margin-right: 0.5rem;">Submit Trade</span>
+            <i v-show="successLoading" class="mdi mdi-check"></i>
+            <i v-show="errorLoading" class="mdi mdi-alert"></i>
+          </button>
+        </b-tooltip>
+        <sync-loader class="spinner" :loading="loading" :color="spinnerColor" :size="spinnerSize"></sync-loader>
+      </div>
     </div>
   </div>
 </div>
@@ -26,17 +33,23 @@ import PlayerSelect from './PlayerSelect.vue'
 import PlayerTrade from './PlayerTrade.vue'
 import TradeStore from '../stores/TradeStore'
 import PlayersStore from '../stores/PlayersStore'
-import axios from 'axios'
+import SyncLoader from 'vue-spinner/src/SyncLoader.vue'
 
 export default {
   name: 'trade-submit',
-  components: {PlayerSwitch, PlayerSelect, PlayerTrade},
+  components: {PlayerSwitch, PlayerSelect, PlayerTrade, SyncLoader},
   data() {
     return {
       numPlayers: 2,
       selectedPlayers: [],
       allPlayers: PlayersStore.members,
-      savedData: TradeStore.data
+      savedData: TradeStore.data,
+      loading: false,
+      spinnerColor: '#7957d5',
+      spinnerSize: '10px',
+      loadingComplete: false,
+      errorLoading: false,
+      successLoading: false
     }
   },
   methods: {
@@ -49,7 +62,7 @@ export default {
     },
     submitTrade() {
       // console.log(TradeStore.data)
-      console.log(this);
+      this.loading = true;
       this.$http.post(`/mailer/tradeRequest`, [TradeStore.data, this.selectedPlayers])
         .then(resp => {
           this.$snackbar.open({
@@ -57,6 +70,9 @@ export default {
             type: "is-light",
             position: "is-top-right"
           });
+          this.loading = false;
+          this.loadingComplete = true;
+          this.successLoading = true;
           console.log(resp);
         })
         .catch(err => {
@@ -65,8 +81,11 @@ export default {
             type: "is-warning",
             position: "is-top-right"
           });
+          this.loading = false;
+          this.loadingComplete = true;
+          this.errorLoading = true;
           console.error(err);
-        })
+        });
     }
   },
   computed: {
@@ -104,6 +123,19 @@ export default {
 
 .btn__trade-submit {
   margin-top: 5rem;
+}
+
+.button-container {
+  padding-left: 50%;
+}
+
+.spinner {
+  margin-top: 5%;
+  margin-left: 5%;
+}
+
+.is-success {
+  background-color: green !important;
 }
 
 .tooltip__trade-submit {

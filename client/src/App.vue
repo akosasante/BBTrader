@@ -1,5 +1,6 @@
 <template>
 	<div id="app" v-bind:class="$route.name">
+		<link rel="stylesheet" href="//cdn.materialdesignicons.com/2.0.46/css/materialdesignicons.min.css">
 		<div class="header-title title">{{ title }}</div>
 		<hr>
 		<router-view></router-view>
@@ -13,7 +14,8 @@
 			return {
 				title: this.$route.name === 'tradeSubmit' ? 
 				'Submit a new trade' : this.$route.name === 'tradeConfirm' ?
-				'Confirm a submitted trade' : 'Finalize the trade below'
+				'Confirm a submitted trade' : this.$route.name === 'tradeSend' ?
+				'Finalize the trade below' : ""
 				}
 			}
 		}

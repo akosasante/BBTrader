@@ -8,7 +8,7 @@ function initAuth(app, passport) {
             if(!err) {
                 res.json({ message: 'User signed up', response: user });
             } else {
-                res.status(500).json({ message: 'Something went wrong', error: err });
+                res.status(500).send({ message: 'Something went wrong', error: err });
             }
         })(req, res, next);
     });
@@ -17,7 +17,7 @@ function initAuth(app, passport) {
             if(!err) {
                 res.json({ message: 'User logged in', response: user });
             } else {
-                res.status(500).json({ message: 'Something went wrong', error: err });
+                res.status(500).send({ message: 'Something went wrong', error: err });
             }
         })(req, res);
     });
@@ -26,7 +26,7 @@ function initAuth(app, passport) {
         console.log(req.body);
         Player.findOne({ email: req.body.email }).then(user => {
             if(!user) {
-                res.status(500).json({ message: 'Something went wrong', error: 'No user with this email exists in the league database' });
+                res.status(500).send({ message: 'Something went wrong', error: 'No user with this email exists in the league database' });
             } else {
                 user.resetPasswordToken = token;
                 user.resetPasswordExpires = Date.now() + 3600000;
@@ -40,7 +40,7 @@ function initAuth(app, passport) {
     app.get('/auth/reset/:token', (req, res) => {
         Player.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()} }).then(user => {
             if(!user) {
-                res.status(500).json({ message: 'Something went wrong', error: 'Password reset token was either invalid or expired'});
+                res.status(500).send({ message: 'Something went wrong', error: 'Password reset token was either invalid or expired'});
             } else {
                 res.json({ message: 'Reseting password for user' });
             }
@@ -49,7 +49,7 @@ function initAuth(app, passport) {
     app.post('/auth/reset/:token', (req, res) => {
         Player.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()} }).then(user => {
             if(!user) {
-                res.status(500).json({ message: 'Something went wrong', error: 'Password reset token was either invalid or expired'});
+                res.status(500).send({ message: 'Something went wrong', error: 'Password reset token was either invalid or expired'});
             } else {
                 user.password = user.generateHash(req.body.password);
                 user.resetPasswordExpires = undefined;

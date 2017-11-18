@@ -9,7 +9,7 @@ modelRouter.route('/getTrade')
             if(!err) {
                 res.json({message: 'Retrieved trades', response: result});
             } else {
-                res.status(500).json({message: 'Something went wrong, please contact admin', error: err});
+                res.status(500).send({message: 'Something went wrong, please contact admin', error: err});
             }
         });
     });
@@ -19,7 +19,7 @@ modelRouter.route('/updateConfirmation')
             if(!err) {
                 res.json({message: 'Updated trade email object', response: result});
             } else {
-                res.status(500).json({message: 'Something went wrong, please contact admin', error: err});
+                res.status(500).send({message: 'Something went wrong, please contact admin', error: err});
             }
         });
     });

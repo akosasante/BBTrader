@@ -9,7 +9,7 @@ emailRouter.route('/tradeRequest')
             if(!err) {
                 res.json({message: 'Trade emailed to user', response: result});
             } else {
-                res.status(500).json({message: 'Something went wrong, please contact admin', error: err});
+                res.status(500).send({message: 'Something went wrong, please contact admin', error: err});
             }
         });
     });
@@ -19,7 +19,7 @@ emailRouter.route('/tradeConfirmation')
             if(!err) {
                 res.json({message: 'Trade emailed to user', response: result});
             } else {
-                res.status(500).json({message: 'Something went wrong, please contact admin', error: err});
+                res.status(500).send({message: 'Something went wrong, please contact admin', error: err});
             }
         });
     });

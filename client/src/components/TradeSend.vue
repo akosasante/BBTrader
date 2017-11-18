@@ -13,11 +13,17 @@
     <p v-if="trade.picks" v-for="pick in trade.picks"><em>Round </em>{{pick.round}}, {{pick.pick}}'s pick <em>to </em> {{pick.rec.name}}</p>
     </p>
   </div>
-  <button class="trade-send__button button is-dark btn__trade-submit" @click="sendToSlack">I Agree</button>
+  <button v-show="!loading" v-bind:class="{ 'is-success': successLoading, 'is-dark' : !loadingComplete, 'is-danger': errorLoading}" class="trade-send__button button btn__trade-submit" @click="sendToSlack" :disabled="successLoading">
+    <span>I Agree</span>
+    <i v-show="successLoading" class="mdi mdi-check"></i>
+    <i v-show="errorLoading" class="mdi mdi-alert"></i>
+  </button>
+  <sync-loader class="submit-spinner" :loading="loading" :color="spinnerColor" :size="spinnerSize"></sync-loader>
 </div>
 </template>
 
 <script>
+import SyncLoader from 'vue-spinner/src/SyncLoader.vue'
 
 const example = [{"_id":"59ff80267b1e4835f36984a2","sender":"cam","__v":0,"picks":[],"prospects":[],"players":[{"player":"fsfdsfs","rec":"mike","_id":"59ff80267b1e4835f36984a4"},{"player":"fsdfsf","rec":"john","_id":"59ff80267b1e4835f36984a3"}]},{"_id":"59ff80267b1e4835f36984a5","sender":"mike","__v":0,"picks":[],"prospects":[{"prospect":"sdfdsfdf","rec":"cam","_id":"59ff80267b1e4835f36984a6"}],"players":[{"player":"sfdsfs","rec":"john","_id":"59ff80267b1e4835f36984a7"}]},{"_id":"59ff80267b1e4835f36984a8","sender":"john","__v":0,"picks":[{"pick":"john","round":17,"rec":"cam","_id":"59ff80267b1e4835f36984a9"}],"prospects":[],"players":[{"player":"sfdsfs","rec":"mike","_id":"59ff80267b1e4835f36984aa"}]}];
 
@@ -34,20 +40,29 @@ async function fetchTrade(tradeIds) {
 
 export default {
   name: 'trade-send',
+  components: {SyncLoader},
   data() {
     return {
-      trades: example
+      trades: example,
+      loadingComplete: false,
+      errorLoading: false,
+      successLoading: false,
+      spinnerColor: '#7957d5',
+      spinnerSize: '10px',
+      loading: false
     };
   },
   created() {
     const promisedTrades = fetchTrade.bind(this, this.$route.query);
         promisedTrades().then((result) => {
-          this.trades = result
-          // console.log(this.trades);
+          if(result) {
+            this.trades = result;
+          }
         });
   },
   methods: {
     sendToSlack() {
+      this.loading = true;
       this.$http.post(`/tradebot/postTrade`, {trades: this.trades, sender: this.$route.params.sender})
         .then(resp => {
           console.log(resp);
@@ -56,6 +71,9 @@ export default {
             type: "is-light",
             position: "is-top-right"
           });
+          this.loading = false;
+          this.loadingComplete = true;
+          this.successLoading = true;
           return resp.data.response;
         })
         .catch(err => {
@@ -64,6 +82,9 @@ export default {
             type: "is-warning",
             position: "is-top-right"
           });
+          this.loading = false;
+          this.loadingComplete = true;
+          this.errorLoading = true;
           console.log(err);
           return null;
         });

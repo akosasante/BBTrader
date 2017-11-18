@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport(sendinBlue(smtpOptions));
 const domain = process.env.DOMAIN;
 
 module.exports.sendPasswordResetEmail = async function(savedUser) {
-    const url = `${domain}/auth/reset/${savedUser.resetPasswordToken}`;
+    const url = `${domain}/reset/${savedUser.resetPasswordToken}`;
     const email = new EmailTemplate({
         message: {
             from: 'tripleabatt+fftradesadmin@gmail.com',
