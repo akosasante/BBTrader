@@ -16,7 +16,7 @@ module.exports.getTrade = function(data, cb) {
         { path: 'picks.rec', model: 'Player' },
         { path: 'sender', model: 'Player' },
     ];
-console.log(tradeIds);
+    console.log(tradeIds);
     Trade.find({
         '_id': { $in : tradeIds }
     }).then(async results => {
@@ -68,6 +68,16 @@ module.exports.getUserId = function(playerId) {
         });
 };
 
+module.exports.getNameOfUser = function(playerId) {
+    return Player.findById(playerId, {name: true})
+        .then(result => {
+            return result;
+        })
+        .catch(error => {
+            console.log(error);
+            return null;
+        });
+};
 
 module.exports.getRecipients = function(tradesArr) {
     const tradeIds = tradesArr.map(trade => mongoose.mongo.ObjectId(trade._id));

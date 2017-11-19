@@ -28,7 +28,7 @@ module.exports.sendTradeMessage = async function(data, cb) {
         console.log('ERROR', err);
         cb(err);
     }
-    console.log('\x1b[45m', 'OKOKOKO', recipients);
+    // console.log('\x1b[45m', 'OKOKOKO', data.trades);
     
     // console.log("H", recipients);
     let text = '*A trade has been made!* \n';
@@ -41,28 +41,63 @@ module.exports.sendTradeMessage = async function(data, cb) {
         }
     });
     text += '\n';
-    data.trades.forEach(trade => {
-        let playersText, prospectsText, picksText;
-        if(trade.players.length > 0) {
-            playersText = `${trade.players.map(player => player.player)} _to_ ${trade.players.map(player => player.rec.name)}`;
-        } else {
-            playersText = 'None';
-        }
-        if(trade.prospects.length > 0) {
-            prospectsText = `${trade.prospects.map(prospect => prospect.prospect)} _to_ ${trade.prospects.map(prospect => prospect.rec.name)}`;
-        } else {
-            prospectsText = 'None';
-        }
-        if(trade.picks.length > 0) {
-            picksText = `_Round:_ ${trade.picks.map(pick => pick.round)}, ${trade.picks.map(pick => pick.pick)}'s pick  _to_ ${trade.picks.map(pick => pick.rec.name)}`;
-        } else {
-            picksText = 'None';
-        }
+    recipients.forEach(recip => {
+        const playersReceived = data.trades.map(trade => [trade.sender, trade.players.filter(player => player.rec.userId === recip)])
+            .reduce((arr, curr) => {
+                let obj = {};
+                obj.sender = curr[0];
+                if(curr[1].length > 0) {
+                    obj.players = curr[1].map(player => player.player);
+                }
+                arr.push(obj);
+                return arr;
+            }, [])
+            .filter(tradeObj => tradeObj.players)
+            .reduce((str, curr) => {
+                return str += `${curr.players.join(', ')} from ${curr.sender.name}; `;
+            }, '');
+        const playersText = playersReceived || 'None';
+
+        const prospectsReceived = data.trades.map(trade => [trade.sender, trade.prospects.filter(player => player.rec.userId === recip)])
+            .reduce((arr, curr) => {
+                let obj = {};
+                obj.sender = curr[0];
+                if(curr[1].length > 0) {
+                    obj.prospects = curr[1].map(prospect => prospect.prospect);
+                }
+                arr.push(obj);
+                return arr;
+            }, [])
+            .filter(tradeObj => tradeObj.prospects)
+            .reduce((str, curr) => {
+                return str += `${curr.prospects.join(', ')} from ${curr.sender.name}; `;
+            }, '');
+        const prospectsText = prospectsReceived || 'None';
+
+        const picksReceived = data.trades.map(trade => [trade.sender, trade.picks.filter(pick => pick.rec.userId === recip)])
+            .reduce((arr, curr) => {
+                let obj = {};
+                obj.sender = curr[0];
+                if(curr[1].length > 0) {
+                    obj.picks = curr[1].map(picks => picks.pick);
+                }
+                arr.push(obj);
+                return arr;
+            }, [])
+            .filter(tradeObj => tradeObj.picks)
+            .reduce((str, curr) => {
+                return str += `${curr.picks.join(', ')} from ${curr.sender.name}; `;
+            }, '');
+        const picksText = picksReceived || 'None';
+
         text += '\n';
-        text += `*From:* ${trade.sender.name}:
-        *Players:* ${playersText}
-        *Prospects:* ${prospectsText}
-        *Picks:* ${picksText}`;
+        text += `*To:* <@${recip}>:
+        *Players:* 
+            ${playersText}
+        *Prospects:* 
+            ${prospectsText}
+        *Picks:* 
+            ${picksText}`;
     });
     console.log('\x1b[41m', 'T', text);
     TradeBot.start();
