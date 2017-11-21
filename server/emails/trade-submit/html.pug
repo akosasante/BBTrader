@@ -20,30 +20,28 @@ h3.mail-header #{sender} requested the following trade involving you #{recipient
             .divTableRow
                 .divTableHead
                     strong Players
-                if trade.players.length > 0
-                    each player in trade.players
-                        .divTableCell.
-                            #{player.player} #[em to] #{player.rec}
-                else
-                    .divTableCell None
+                .divTableCell
+                    if trade.players.length > 0
+                        each player in trade.players
+                            p #{player.player} #[em to] #{player.rec}
+                    else
+                        p None
             .divTableRow
                 .divTableHead
                     strong Prospects
-                if trade.prospects.length > 0
-                    each prospect in trade.prospects
-                        .divTableCell.
-                            #{prospect.prospect} #[em to] #{prospect.rec}
-                else
-                    .divTableCell None
+                .divTableCell
+                    if trade.prospects.length > 0
+                        each prospect in trade.prospects
+                            p #{prospect.prospect} #[em to] #{prospect.rec}, 
+                    else
+                        p None
             .divTableRow
                 .divTableHead
                     strong Picks
-                if trade.picks.length > 0
-                    each pick in trade.picks
-                        .divTableCell.
-                            #[strong Round: ] #{pick.round}, #[strong Pick: ] #{pick.pick} #[em to] #{pick.rec}
-                else
-                    .divTableCell None
-    a.link-button(href=`${url}`) Click here to confirm the trade.
-    p
-        strong ** Just for testing **
+                .divTableCell
+                    if trade.picks.length > 0
+                        each pick in trade.picks
+                            p #[strong Round: ] #{pick.round}, #[strong Pick: ] #{pick.pick} #[em to] #{pick.rec}
+                    else
+                        p None
+    a.link-button(href=`${url}`) Click here to go to the trade confirmation page.

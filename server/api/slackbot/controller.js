@@ -54,7 +54,7 @@ module.exports.sendTradeMessage = async function(data, cb) {
             }, [])
             .filter(tradeObj => tradeObj.players)
             .reduce((str, curr) => {
-                return str += `${curr.players.join(', ')} from ${curr.sender.name}; `;
+                return str += `${curr.players.join(', ')} _(from ${curr.sender.name})_;  `;
             }, '');
         const playersText = playersReceived || 'None';
 
@@ -70,7 +70,7 @@ module.exports.sendTradeMessage = async function(data, cb) {
             }, [])
             .filter(tradeObj => tradeObj.prospects)
             .reduce((str, curr) => {
-                return str += `${curr.prospects.join(', ')} from ${curr.sender.name}; `;
+                return str += `${curr.prospects.join(', ')} _(from ${curr.sender.name})_;  `;
             }, '');
         const prospectsText = prospectsReceived || 'None';
 
@@ -79,14 +79,14 @@ module.exports.sendTradeMessage = async function(data, cb) {
                 let obj = {};
                 obj.sender = curr[0];
                 if(curr[1].length > 0) {
-                    obj.picks = curr[1].map(picks => picks.pick);
+                    obj.picks = curr[1].map(picks => ({pick: picks.pick, round: picks.round}));
                 }
                 arr.push(obj);
                 return arr;
             }, [])
             .filter(tradeObj => tradeObj.picks)
             .reduce((str, curr) => {
-                return str += `${curr.picks.join(', ')} from ${curr.sender.name}; `;
+                return str += `${curr.picks.map(pick => `${pick.pick}'s _round ${pick.round}_ pick`).join(', ')} _(from ${curr.sender.name});  `;
             }, '');
         const picksText = picksReceived || 'None';
 

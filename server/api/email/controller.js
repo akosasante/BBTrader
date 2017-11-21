@@ -22,7 +22,7 @@ module.exports.sendPasswordResetEmail = async function(savedUser) {
     const url = `${domain}/reset/${savedUser.resetPasswordToken}`;
     const email = new EmailTemplate({
         message: {
-            from: 'tripleabatt+fftradesadmin@gmail.com',
+            from: 'tradebot@flexfoxfantasy.com',
             to: savedUser.email
         },
         transport: transporter,
@@ -50,7 +50,7 @@ module.exports.sendPasswordResetEmail = async function(savedUser) {
 module.exports.sendPasswordConfirmEmail = async function(savedUser) {
     const email = new EmailTemplate({
         message: {
-            from: 'tripleabatt+fftradesadmin@gmail.com',
+            from: 'tradebot@flexfoxfantasy.com',
             to: savedUser.email
         },
         transport: transporter,
@@ -93,7 +93,7 @@ module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData)
         url += `${indx}=${id}&`;
     });
     const sendInfo = {
-        from: 'tripleabatt+fftradesadmin@gmail.com',
+        from: 'tradebot@flexfoxfantasy.com',
         to: senderEmail,
     };
     const email = new EmailTemplate({
@@ -147,7 +147,7 @@ function sendTradeRequestMail(sender, recipient, tradeData, tradeIds) {
     });
     console.log(url);
     const sendInfo = {
-        from: sender.email,
+        from: 'tradebot@flexfoxfantasy.com',
         to: recipient.email,
     };
     const email = new EmailTemplate({
