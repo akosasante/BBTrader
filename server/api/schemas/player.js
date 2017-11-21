@@ -19,9 +19,12 @@ var playerSchema = new Schema({
 playerSchema.methods.generateHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 
 playerSchema.methods.validPassword = function(password) {
-    let x = bcrypt.compareSync(password, this.password); 
-    console.log(x);
-    return x;   
+    try {
+        return bcrypt.compareSync(password, this.password);
+    } catch(e) {
+        console.log(e);
+        return null;
+    }  
 };
 
 module.exports = mongoose.model('Player', playerSchema);

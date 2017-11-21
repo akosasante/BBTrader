@@ -32,6 +32,8 @@ function configPassport(passport) {
         Player.findOne({ 'email': email }).then(user => {
             if(!user) {
                 return done('No user with this email exists in the league database');
+            } else if(!(user.password)) {
+                return done('Oops! Have you set up a password yet? Please register');
             } else if(!(user.validPassword(password))) {
                 return done('Oops! Are you sure you used the right password?');
             } else {
