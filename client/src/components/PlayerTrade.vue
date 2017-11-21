@@ -17,7 +17,7 @@
   </div>
   <b-field class="trade-field__grouped" grouped group-multiline>
     <b-field class="trade-label" label="Enter Player">
-      <b-input class="trade-input" v-model="inputtedPlayer" placeholder="Add a player"></b-input>
+      <b-input class="trade-input" v-model="inputtedPlayer" @keyup.native.enter="addPlayer" placeholder="Add a player"></b-input>
       <b-select v-if="numPlayers > 2" v-model="playerTo" placeholder="Select a recipient">
         <option v-for="trader in traders" :value="trader">
             {{ trader.name }}
@@ -28,7 +28,7 @@
       </p>
     </b-field>
     <b-field class="trade-label" label="Enter Prospect">
-      <b-input class="trade-input" v-model="inputtedProspect" placeholder="Add a prospect"></b-input>
+      <b-input class="trade-input" v-model="inputtedProspect" @keyup.native.enter="addProspect" placeholder="Add a prospect"></b-input>
       <b-select v-if="numPlayers > 2" v-model="prospectTo" placeholder="Select a recipient">
         <option v-for="trader in traders" :value="trader">
             {{ trader.name }}
@@ -39,7 +39,7 @@
       </p>
     </b-field>
     <b-field class="trade-label" label="Enter Pick">
-      <b-input class="trade-input" v-model="inputtedPickRound" placeholder="Round" type="number" min="16" max="25"></b-input>
+      <b-input class="trade-input" v-model="inputtedPickRound" @keyup.native.enter="addPick" placeholder="Round" type="number" min="16" max="25"></b-input>
       <b-select v-model="inputtedPick" placeholder="Pick">
         <option v-for="player in allPlayers" :value="player">
             {{ player.name }}
@@ -64,6 +64,8 @@ import _ from 'lodash'
 
 function updateSavedData(player, tradeType, tradeData) {
   let savedIndex = _.findIndex(TradeStore.data, ['sender', player._id.$oid]);
+  console.log('saving player trde data');
+  console.log(player);
   //If sender hasn't been saved before, then add them
   if(savedIndex === -1) {
     TradeStore.data.push({sender: player._id.$oid});
@@ -106,6 +108,12 @@ export default {
         // console.log(trade);
         this.players.push(trade);
         updateSavedData(this.player, "players", this.players);        
+      } else {
+        return this.$snackbar.open({
+          message: "Please select the recipient of this player",
+          type: 'is-warning',
+          position: 'is-top-right'
+        });
       }
       this.inputtedPlayer = null;
       this.playerTo = null;
@@ -118,6 +126,12 @@ export default {
         const trade = { prospect: this.inputtedProspect, rec: this.prospectTo };
         this.prospects.push(trade);
         updateSavedData(this.player, "prospects", this.prospects);
+      } else {
+        return this.$snackbar.open({
+          message: "Please select the recipient of this player",
+          type: 'is-warning',
+          position: 'is-top-right'
+        });
       }
       this.inputtedProspect = null;
       this.prospectTo = null;
@@ -130,6 +144,12 @@ export default {
         const trade = { pick: this.inputtedPick.name, round: this.inputtedPickRound, rec: this.pickTo };
         this.picks.push(trade);
         updateSavedData(this.player, "picks", this.picks);
+      } else {
+        return this.$snackbar.open({
+          message: "Please select the recipient of this player",
+          type: 'is-warning',
+          position: 'is-top-right'
+        });
       }
       this.inputtedPick = null;
       this.inputtedPickRound = null;

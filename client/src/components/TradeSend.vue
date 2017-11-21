@@ -13,12 +13,16 @@
     <p v-if="trade.picks" v-for="pick in trade.picks"><em>Round </em>{{pick.round}}, {{pick.pick}}'s pick <em>to </em> {{pick.rec.name}}</p>
     </p>
   </div>
-  <button v-show="!loading" v-bind:class="{ 'is-success': successLoading, 'is-dark' : !loadingComplete, 'is-danger': errorLoading}" class="trade-send__button button btn__trade-submit" @click="sendToSlack" :disabled="successLoading">
-    <span>I Agree</span>
-    <i v-show="successLoading" class="mdi mdi-check"></i>
-    <i v-show="errorLoading" class="mdi mdi-alert"></i>
-  </button>
-  <sync-loader class="submit-spinner" :loading="loading" :color="spinnerColor" :size="spinnerSize"></sync-loader>
+  <div class="button-container">
+    <b-tooltip class="tooltip__trade" animated multilined position="is-bottom" label="This will send the final trade info to the #announcements Slack channel.">
+      <button v-show="!loading" v-bind:class="{ 'is-success': successLoading, 'is-dark' : !loadingComplete, 'is-danger': errorLoading}" class="trade-send__button button btn__trade-submit" @click="sendToSlack" :disabled="successLoading">
+        <span>I Agree</span>
+        <i v-show="successLoading" class="mdi mdi-check"></i>
+        <i v-show="errorLoading" class="mdi mdi-alert"></i>
+      </button>
+    </b-tooltip>
+    <sync-loader class="submit-spinner spinner" :loading="loading" :color="spinnerColor" :size="spinnerSize"></sync-loader>
+  </div>
 </div>
 </template>
 
@@ -101,4 +105,18 @@ export default {
   margin-left: 10%;
   width: 80%;
 }
+
+.button-container {
+  padding-left: 50%;
+}
+
+.spinner {
+  margin-top: 5%;
+  margin-left: 5%;
+}
+
+.tooltip__trade {
+  justify-content: center;
+}
+
 </style>

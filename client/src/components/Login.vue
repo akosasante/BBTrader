@@ -27,6 +27,16 @@
 
 <script>
 import SyncLoader from 'vue-spinner/src/SyncLoader.vue'
+import storageAvailable from 'storage-available'
+import currUser from '../stores/CurrUserStore'
+
+function getCurrUser() {
+  if(storageAvailable('localStorage')) {
+    return JSON.parse(window.localStorage.getItem('currUser'));
+  } else {
+    return JSON.parse(currUser.username);
+  }
+};
 
 export default {
     name: 'login',
@@ -41,6 +51,16 @@ export default {
             loadingComplete: false,
             errorLoading: false,
             successLoading: false
+        }
+    },
+    created() {
+        if(getCurrUser()) {
+            this.$snackbar.open({
+                message: "Welcome back.",
+                type: "is-light",
+                position: "is-top-right"
+            });
+            this.$router.push({ name: 'tradeSubmit'});
         }
     },
     methods: {
@@ -96,6 +116,13 @@ export default {
                         this.errorLoading = false;
                         this.loadingComplete = true;
                         this.successLoading = true;
+                        const user = resp.data.response;
+                        user._id = {"$oid": user._id};
+                        if(storageAvailable('localStorage')) {
+                            window.localStorage.setItem('currUser', JSON.stringify(user));
+                        } else {
+                            currUser.setUser(JSON.stringify(user));
+                        }
                         this.$router.push({ name: 'tradeSubmit'});
                     })
                     .catch(err => {

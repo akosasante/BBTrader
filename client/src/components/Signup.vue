@@ -28,6 +28,8 @@
 
 <script>
 import SyncLoader from 'vue-spinner/src/SyncLoader.vue'
+import storageAvailable from 'storage-available'
+import currUser from '../stores/CurrUserStore'
 
 export default {
     name: 'register',
@@ -76,6 +78,13 @@ export default {
                         this.loading = false;
                         this.loadingComplete = true;
                         this.successLoading = true;
+                        const user = resp.data.response;
+                        user._id = {"$oid": user._id};
+                        if(storageAvailable('localStorage')) {
+                            window.localStorage.setItem('currUser', JSON.stringify(user));
+                        } else {
+                            currUser.setUser(JSON.stringify(user));
+                        }
                         this.$router.push({ name: 'tradeSubmit'});
                     })
                     .catch(err => {

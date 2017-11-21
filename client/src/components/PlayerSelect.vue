@@ -1,18 +1,33 @@
 <template>
 <div class="player-select">
   <div class="o-combobox">
-    <p v-if="playerNo === 0" class="you-field"><strong>YOU:</strong></p>
-    <p v-if="playerNo > 0" class="you-field"><strong>Recipient:</strong></p>
-    <input class="o-combobox__input" type="search" v-bind:placeholder="placeholder" v-model="selectedPlayer" v-on:click="showAutocompleteDropdown = true" v-on:keyup.enter.prevent="select(selectedIndex)" v-on:keydown.down.prevent="selectNext()" v-on:keydown.up.prevent="selectPrev()" v-on:keyup.8="handleBackspace()" />
-    <ul class="o-player-list" v-if="showAutocompleteDropdown">
-      <li class="o-player-list__item" v-for="(player, $index) in filteredPlayers" v-on:click="select($index)" v-bind:class="{'o-player-list__item--selected': $index == selectedIndex}">{{ player.name }}</li>
-    </ul>
+    <p class="you-field"><strong>Participant #{{playerNo + 1}}</strong></p>
+    <div v-if="playerNo > 0">
+      <input class="o-combobox__input" type="search" v-bind:placeholder="placeholder" v-model="selectedPlayer" v-on:click="showAutocompleteDropdown = true" v-on:keyup.enter.prevent="select(selectedIndex)" v-on:keydown.down.prevent="selectNext()" v-on:keydown.up.prevent="selectPrev()" v-on:keyup.8="handleBackspace()" />
+      <ul class="o-player-list" v-if="showAutocompleteDropdown">
+        <li class="o-player-list__item" v-for="(player, $index) in filteredPlayers" v-on:click="select($index)" v-bind:class="{'o-player-list__item--selected': $index == selectedIndex}">{{ player.name }}</li>
+      </ul>
+    </div>
+    <div v-if="playerNo == 0">
+      <input class="o-combobox__input" v-bind:value="defaultPlayer.name" disabled />
+    </div>
   </div>
 </div>
 
 </template>
 
 <script>
+import storageAvailable from 'storage-available'
+import currUser from '../stores/CurrUserStore'
+
+function getCurrUser() {
+  if(storageAvailable('localStorage')) {
+    return JSON.parse(window.localStorage.getItem('currUser'));
+  } else {
+    return JSON.parse(currUser.username);
+  }
+};
+
 export default {
   name: 'player-select',
   props: ['players', 'playerNo'],
@@ -23,12 +38,18 @@ export default {
       showAutocompleteDropdown: false,
       selectedIndex: 0,
       selectedPlayer: '',
-      selectedPlayerObject: {}
+      selectedPlayerObject: {},
+      defaultPlayer: getCurrUser()
+    }
+  },
+  created() {
+    if(this.playerNo === 0) {
+      this.$emit('selected-player', this.defaultPlayer, this.playerNo);
     }
   },
   computed: {
     filteredPlayers: function() {
-      return this.players.filter(player => player.name.toLowerCase().startsWith(this.selectedPlayer))
+      return this.players.filter(player => player.name !== this.defaultPlayer.name).filter(player => player.name.toLowerCase().startsWith(this.selectedPlayer))
     }
   },
   methods: {

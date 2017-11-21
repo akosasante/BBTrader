@@ -13,11 +13,15 @@
     <p v-if="trade.picks" v-for="pick in trade.picks"><em>Round </em>{{pick.round}}, {{pick.pick}}'s pick <em>to </em> {{pick.rec.name}}</p>
     </p>
   </div>
-  <button v-show="!loading" v-bind:class="{ 'is-success': successLoading, 'is-dark' : !loadingComplete, 'is-danger': errorLoading}" class="trade-confirm__button button btn__trade-submit" @click="confirmTrade" :disabled="successLoading">
-    <span>I Agree</span>
-    <i v-show="successLoading" class="mdi mdi-check"></i>
-    <i v-show="errorLoading" class="mdi mdi-alert"></i>
-  </button>
+  <div class="button-container">
+    <b-tooltip class="tooltip__trade-submit" animated multilined position="is-bottom" label="This will let tradebot know you accept this trade and notify the owner who requested this trade.">
+      <button v-show="!loading" v-bind:class="{ 'is-success': successLoading, 'is-dark' : !loadingComplete, 'is-danger': errorLoading}" class="trade-confirm__button button btn__trade-submit" @click="confirmTrade" :disabled="successLoading">
+        <span>I Agree</span>
+        <i v-show="successLoading" class="mdi mdi-check"></i>
+        <i v-show="errorLoading" class="mdi mdi-alert"></i>
+      </button>
+    </b-tooltip>
+  </div>
 </div>
 </template>
 
@@ -29,7 +33,7 @@ const example = [{"_id":"59ff80267b1e4835f36984a2","sender":"cam","__v":0,"picks
 
 async function fetchTrade(tradeIds) {
   try {
-    const resp = await this.$http.post(`/models/getTrade`, tradeIds);
+    const resp = await this.$http.post(`http://localhost:3000/models/getTrade`, tradeIds);
     // console.log(resp);
     return resp.data.response;
   } catch(err) {
@@ -75,6 +79,7 @@ export default {
           });
           this.loading = false;
           this.loadingComplete = true;
+          this.errorLoading = false;
           this.successLoading = true;
           return resp.data.response;
         })
@@ -87,6 +92,7 @@ export default {
           this.loading = false;
           this.loadingComplete = true;
           this.errorLoading = true;
+          this.successLoading = false;
           console.log(err);
           return null;
         });
@@ -102,5 +108,18 @@ export default {
 .trade-confirm__box {
   margin-left: 10%;
   width: 80%;
+}
+
+.button-container {
+  padding-left: 50%;
+}
+
+.spinner {
+  margin-top: 5%;
+  margin-left: 5%;
+}
+
+.tooltip__trade {
+  justify-content: center;
 }
 </style>

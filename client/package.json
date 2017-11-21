@@ -13,6 +13,7 @@
     "buefy": "^0.6.0",
     "lodash": "^4.17.4",
     "mdi": "^2.0.46",
+    "storage-available": "^1.0.0",
     "vue": "^2.4.4",
     "vue-router": "^3.0.1",
     "vue-spinner": "^1.0.3"

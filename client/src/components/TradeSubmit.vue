@@ -13,7 +13,7 @@
       <player-trade :num-players="numPlayers" :all-players="allPlayers" :all-traders="selectedPlayers" :player="selectedPlayers[1]"></player-trade>
       <player-trade :num-players="numPlayers" :all-players="allPlayers" :all-traders="selectedPlayers" :player="selectedPlayers[2]" v-if="selectedPlayers[2]"></player-trade>
       <div class="button-container">
-        <b-tooltip class="tooltip__trade-submit" animated multilined position="is-bottom" label="This will send the above trade information to the selected users">
+        <b-tooltip class="tooltip__trade" animated multilined position="is-bottom" label="This will send the above trade information to the selected users">
           <button v-show="!loading" v-bind:class="{ 'is-success': successLoading, 'is-dark' : !loadingComplete, 'is-danger': errorLoading}" class="button btn__trade-submit" @click="submitTrade" :disabled="successLoading">
             <span style="margin-right: 0.5rem;">Submit Trade</span>
             <i v-show="successLoading" class="mdi mdi-check"></i>
@@ -59,6 +59,7 @@ export default {
     updatePlayer(selectedPlayer, playerNo) {
       this.selectedPlayers[playerNo] = selectedPlayer;
       this.selectedPlayers= this.selectedPlayers.slice();
+      console.log(this.selectedPlayers);
     },
     submitTrade() {
       // console.log(TradeStore.data)
@@ -134,12 +135,12 @@ export default {
   margin-left: 5%;
 }
 
-.is-success {
-  background-color: green !important;
+.tooltip__trade {
+  justify-content: center;
 }
 
-.tooltip__trade-submit {
-  justify-content: center;
+.is-success {
+  background-color: green !important;
 }
 
 @media (max-width: 960px) {

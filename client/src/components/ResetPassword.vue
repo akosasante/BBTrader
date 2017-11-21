@@ -120,7 +120,7 @@ export default {
                         this.loading = false;
                         this.successLoading = true;
                         this.loadingComplete = true;
-                        this.$router.push({ name: 'tradeSubmit'});
+                        this.$router.push({ name: 'login'});
                     })
                     .catch(err => {
                         const msg = err.response.status === 500 ? err.response.data.error : "Please contact the commissioner";
