@@ -15,11 +15,25 @@
   </div>
   <div class="button-container">
     <b-tooltip class="tooltip__trade-submit" animated multilined position="is-bottom" label="This will let tradebot know you accept this trade and notify the owner who requested this trade.">
-      <button v-show="!loading" v-bind:class="{ 'is-success': successLoading, 'is-dark' : !loadingComplete, 'is-danger': errorLoading}" class="trade-confirm__button button btn__trade-submit" @click="confirmTrade" :disabled="successLoading">
+      <button v-show="!loading" v-bind:class="{ 'is-success': successLoading, 'is-dark' : !loadingComplete, 'is-danger': errorLoading || expired}" class="trade-confirm__button button btn__trade-submit" @click="confirmTrade" :disabled="successLoading || expired">
         <span>I Agree</span>
         <i v-show="successLoading" class="mdi mdi-check"></i>
         <i v-show="errorLoading" class="mdi mdi-alert"></i>
       </button>
+    </b-tooltip>
+    <sync-loader class="submit-spinner spinner" :loading="loading" :color="spinnerColor" :size="spinnerSize"></sync-loader>
+  </div>
+  <div class="button-container">
+    <b-tooltip class="tooltip__trade-submit" animated multilined position="is-bottom" label="This will let tradebot know you decline this trade and notify the owner who requested this trade.">
+      <button v-show="!loadingDecline" v-bind:class="{ 'is-success': successDeclining, 'is-warning' : !declineComplete, 'is-danger': errorDeclining || expired}" class="trade-confirm__button button btn__trade-submit" @click="declineTrade" :disabled="successDeclining || expired">
+        <span>Decline Trade</span>
+        <i v-show="successDeclining" class="mdi mdi-check"></i>
+        <i v-show="errorDeclining" class="mdi mdi-alert"></i>
+      </button>
+      <b-field class="decline-input">
+        <b-input v-model="declineReason" type="textarea" min-length="5" max-length="250" placeholder="Reason for declining trade (optional)"></b-input>
+      </b-field>
+      <sync-loader class="submit-spinner spinner" :loading="loadingDecline" :color="spinnerColor" :size="spinnerSize"></sync-loader>
     </b-tooltip>
   </div>
 </div>
@@ -33,7 +47,7 @@ const example = [{"_id":"59ff80267b1e4835f36984a2","sender":"cam","__v":0,"picks
 
 async function fetchTrade(tradeIds) {
   try {
-    const resp = await this.$http.post(`http://localhost:3000/models/getTrade`, tradeIds);
+    const resp = await this.$http.post(`/models/getTrade`, tradeIds);
     // console.log(resp);
     return resp.data.response;
   } catch(err) {
@@ -52,9 +66,15 @@ export default {
       loadingComplete: false,
       errorLoading: false,
       successLoading: false,
+      declineComplete: false,
+      successDeclining: false,
+      errorDeclining: false,
       spinnerColor: '#7957d5',
       spinnerSize: '10px',
-      loading: false
+      loading: false,
+      loadingDecline: false,
+      expired: false,
+      declineReason: null
     };
   },
   created() {
@@ -62,7 +82,23 @@ export default {
     promisedTrades().then(result => {
       if(result) {
         this.trades = result;
+        return Promise.resolve(result);
       }
+    }).then(result => {
+      this.$http.post(`/models/checkTradeValid`, {recip: this.recipient, trades: result})
+        .then(resp => {
+          console.log(resp);
+        })
+        .catch(err => {
+          const msg = err.response.data.error.reason === "Expired" ? "This trade has expired, you cannot accept/decline it anymore" : "This trade was declined; it is no longer valid";
+          this.expired = true;
+          return this.$snackbar.open({
+            message: msg,
+            type: "is-warning",
+            position: "is-top-right"
+          });
+          console.log(err.response)
+        });
     });
   },
   methods: {
@@ -96,27 +132,66 @@ export default {
           console.log(err);
           return null;
         });
+    },
+    declineTrade() {
+      this.loadingDecline = true;
+      const declinationData = { recip: this.recipient, trades: this.trades, reason: this.declineReason };
+      this.$http.post(`/models/declineTrade`, declinationData)
+        .then(resp => {
+          console.log(resp);
+          this.$snackbar.open({
+            message: "You have declined the details of this trade. All trade participants will be informed",
+            type: "is-light",
+            position: "is-top-right"
+          });
+          this.loadingDecline = false;
+          this.declineComplete = true;
+          this.errorDeclining = false;
+          this.successDeclining = true;
+          this.declineReason = null;
+          return resp.data.response;
+        })
+        .catch(err => {
+          this.$snackbar.open({
+            message: "Something went wrong. Please refresh the page and try again, or contact your commissioner.",
+            type: "is-warning",
+            position: "is-top-right"
+          });
+          this.loadingDecline = false;
+          this.declineComplete = true;
+          this.errorDeclining = true;
+          this.successDeclining = false;
+          this.declineReason = null;
+          console.log(err);
+          return null;
+        });
     }
   }
 };
 </script>
 
 <style>
-.trade-confirm__button {
+/* .trade-confirm__button {
   margin-left: 50%;
-}
+} */
 .trade-confirm__box {
   margin-left: 10%;
   width: 80%;
 }
 
 .button-container {
-  padding-left: 50%;
+  display: inline-block;
+  margin-left: 20%;
+  margin-top: 5%;
 }
 
 .spinner {
   margin-top: 5%;
   margin-left: 5%;
+}
+
+.decline-input {
+  margin-left: 1rem;
 }
 
 .tooltip__trade {
