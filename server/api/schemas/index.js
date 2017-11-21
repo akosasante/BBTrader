@@ -23,5 +23,25 @@ modelRouter.route('/updateConfirmation')
             }
         });
     });
+modelRouter.route('/declineTrade')
+    .post((req, res) => {
+        modelController.declineTrade(req.body, (err, result) => {
+            if(!err) {
+                res.json({message: 'Successfully declined trade', response: result});
+            } else {
+                res.status(500).send({message: 'Something went wrong, please contact admin', error: err});
+            }
+        });
+    });
+modelRouter.route('/checkTradeValid')
+    .post((req, res) => {
+        modelController.checkTradeValid(req.body, (err, result) => {
+            if(!err) {
+                res.json({message: 'Trade still valid', response: result});
+            } else {
+                res.status(500).send({message: 'Something went wrong, please contact admin', error: err});
+            }
+        });
+    });
 
 module.exports = modelRouter;

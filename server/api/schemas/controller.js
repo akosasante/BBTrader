@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const _ = require('lodash');
 const inverseMembersMap = require('../../config/members').nameToId;
+const moment = require('moment');
 
 module.exports.getTrade = function(data, cb) {
     const tradeIds = _.values(data).map(id => mongoose.mongo.ObjectId(id));
@@ -48,8 +49,8 @@ module.exports.getEmail = function(userId) {
     console.log(userId);
     return Player.findById(userId)
         .then(result => {
-            console.log('RESULT!: ', result);
-            return result;
+            // console.log('RESULT!: ', result.email);
+            return result.email;
         })
         .catch(error => {
             console.log(error);
@@ -116,6 +117,48 @@ module.exports.updateConfirmation = function(data, cb) {
             } catch(err) {
                 console.log(err);
             }
+        }
+        cb(null, result);
+    }).catch(err => {
+        console.log(err);
+        cb(err);
+    });
+};
+
+module.exports.checkTradeValid = function(data, cb) {
+    const tradeIds = (data.trades).map(trade => mongoose.mongo.ObjectId(trade._id));
+    const recipientId = inverseMembersMap[data.recip];
+
+    TradeEmails.findOne({trades: tradeIds, 'recipients.recipient': recipientId})
+        .then(result => {
+            console.log('x1b[44m', 'Expiry Result: ', result);
+            if(moment() > result.expiry) {
+                console.log('EXPIRED TRADE');
+                cb({reason: 'Expired', err: result.expiry});
+            } else if(result.declined.status) {
+                console.log('DECLINED TRADE');
+                cb({reason: 'Declined', err: result.declined});
+            } else {
+                cb(null, result);
+            }
+        });
+};
+
+module.exports.declineTrade = function (data, cb) {
+    const tradeIds = (data.trades).map(trade => mongoose.mongo.ObjectId(trade._id));
+    const recipientId = inverseMembersMap[data.recip];
+
+    TradeEmails.findOneAndUpdate({trades: tradeIds, 'recipients.recipient': recipientId}, {$set: {'declined.status': true, 'declined.by': recipientId}}, {'new': true}).then(async result => {
+        console.log('\x1b[42m', 'DECLINE RESULT: ', result);
+        try {
+            let recipients = result.recipients.map(recip => recip.recipient);
+            recipients.push(result.sender);
+            console.log('RECIPS', recipients);
+            let email = await emailController.sendDeclineEmail(recipients, data.trades, result, data.reason);
+            console.log('\x1b[43m', 'Declination EMAIL SENT');
+        } catch(err) {
+            console.log(err);
+            throw err;
         }
         cb(null, result);
     }).catch(err => {

@@ -1,0 +1,39 @@
+| The trade below was declined by #{declinedBy}:
+| Reason given: #{reason || "None"}
+|
+each trade in tradeData
+    |
+    | From: #{trade.sender.name}
+    |
+    | Players:
+    if trade.players.length > 0
+        each player in trade.players
+            | #{player.player} to #{player.rec.name}
+            |
+    else
+        | None
+        |
+    |
+    | Prospects:
+    if trade.prospects.length > 0
+        each prospect in trade.prospects
+            | #{prospect.prospect} to #{prospect.rec.name}
+            |
+    else
+        | None
+        |
+    |
+    | Picks:
+    if trade.picks.length > 0
+        each pick in trade.picks
+            |  Round #{pick.round}, Pick #{pick.pick} to #{pick.rec.name}
+            |
+    else
+        | None
+        |
+    
+    |
+    |_____________________
+    |
+|
+|

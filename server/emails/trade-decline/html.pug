@@ -7,15 +7,16 @@ html
             meta(http-equiv="X-UA-Compatible", content="IE=edge")
             meta(name="x-apple-disable-message-reformatting")
             title= subject
-            link(rel="stylesheet", href="./trade-submit/trade-submit.css", data-inline)
+            link(rel="stylesheet", href="./trade-decline/trade-decline.css", data-inline)
 
-h3.mail-header #{sender} requested the following trade involving you #{recipient}:
+h3.mail-header The trade below was declined by #{declinedBy}:
+h5 Reason given: #{reason || "None"}
 
 .mail-container
     each trade in tradeData
         .mail-title
             strong From:
-            p #{trade.sender}
+            p #{trade.sender.name}
         .divTable.blueTable
             .divTableRow
                 .divTableHead
@@ -23,7 +24,7 @@ h3.mail-header #{sender} requested the following trade involving you #{recipient
                 .divTableCell
                     if trade.players.length > 0
                         each player in trade.players
-                            p #{player.player} #[em to] #{player.rec}
+                            p #{player.player} #[em to] #{player.rec.name}
                     else
                         p None
             .divTableRow
@@ -32,7 +33,7 @@ h3.mail-header #{sender} requested the following trade involving you #{recipient
                 .divTableCell
                     if trade.prospects.length > 0
                         each prospect in trade.prospects
-                            p #{prospect.prospect} #[em to] #{prospect.rec}, 
+                            p #{prospect.prospect} #[em to] #{prospect.rec.name}
                     else
                         p None
             .divTableRow
@@ -41,8 +42,6 @@ h3.mail-header #{sender} requested the following trade involving you #{recipient
                 .divTableCell
                     if trade.picks.length > 0
                         each pick in trade.picks
-                            p #[strong Round: ] #{pick.round}, #[strong Pick: ] #{pick.pick} #[em to] #{pick.rec}
+                            p #[strong Round: ] #{pick.round}, #[strong Pick: ] #{pick.pick} #[em to] #{pick.rec.name}
                     else
                         p None
-    a.link-button(href=`${url}`) Click here to go to the trade confirmation page.
-    p #[strong Note:] This trade is valid until #{expiry}.

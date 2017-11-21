@@ -10,6 +10,7 @@ const EmailTemplate = require('email-templates');
 const path = require('path');
 const membersMap = require('../../config/members').idToName;
 const modelController = require('../schemas/controller.js');
+const moment = require('moment');
 
 //TODO: Remove api key
 const smtpOptions = {
@@ -17,6 +18,7 @@ const smtpOptions = {
 };
 const transporter = nodemailer.createTransport(sendinBlue(smtpOptions));
 const domain = process.env.DOMAIN;
+const fromEmail = 'tradebot@flexfoxfantasy.com';
 
 module.exports.sendPasswordResetEmail = async function(savedUser) {
     const url = `${domain}/reset/${savedUser.resetPasswordToken}`;
@@ -75,12 +77,50 @@ module.exports.sendPasswordConfirmEmail = async function(savedUser) {
     });
 };
 
+module.exports.sendDeclineEmail = async function(recipients, tradeData, tradeEmail, reason) {
+    const declinedBy = membersMap[tradeEmail.declined.by];
+
+    try {
+        const recipEmails = await Promise.all(recipients.map(recip => modelController.getEmail(recip)));
+        console.log('\x1b[41m', 'Declination Recip', recipEmails);
+        const sendInfo = {
+            from: fromEmail,
+            to: recipEmails
+        };
+
+        const email = new EmailTemplate({
+            message: sendInfo,
+            transport: transporter,
+            preview: true,
+            send: false,
+            juice: true,
+            juiceResources: {
+                preserveImportant: true,
+                webResources: {
+                    relativeTo: path.resolve('emails')
+                }
+            },
+            htmlToText: false
+        });
+        return email.send({
+            template: 'trade-decline',
+            locals: {
+                declinedBy: declinedBy,
+                tradeData: tradeData,
+                reason: reason
+            }
+        });
+    } catch(emailError) {
+        console.log(emailError);
+        return null;
+    }
+};
+
 module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData) {
     const senderName = membersMap[sender];
     let senderEmail;
     try {
-        const senderObj = await modelController.getEmail(sender);
-        senderEmail = senderObj.email;
+        const senderEmail = await modelController.getEmail(sender);
         console.log('\x1b[41m', 'VALIDATION SENDER', senderEmail);        
     } catch(emailError) {
         console.log(emailError);
@@ -93,7 +133,7 @@ module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData)
         url += `${indx}=${id}&`;
     });
     const sendInfo = {
-        from: 'tradebot@flexfoxfantasy.com',
+        from: fromEmail,
         to: senderEmail,
     };
     const email = new EmailTemplate({
@@ -120,7 +160,7 @@ module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData)
     });
 };
 
-function sendTradeRequestMail(sender, recipient, tradeData, tradeIds) {
+function sendTradeRequestMail(sender, recipient, tradeData, tradeIds, expiryDate) {
     const namedTradeData = tradeData.map(trade => {
         console.log('TRADEREQUEST: ', recipient);
         const senderName = membersMap[trade.sender];
@@ -153,8 +193,8 @@ function sendTradeRequestMail(sender, recipient, tradeData, tradeIds) {
     const email = new EmailTemplate({
         message: sendInfo,
         transport: transporter,
-        preview: false,
-        send: true,
+        preview: true,
+        send: false,
         juice: true,
         juiceResources: {
             preserveImportant: true,
@@ -170,7 +210,8 @@ function sendTradeRequestMail(sender, recipient, tradeData, tradeIds) {
             sender: sender.name,
             recipient: recipient.name,
             tradeData: namedTradeData,
-            url: url
+            url: url,
+            expiry: moment(expiryDate).format('MMM DD YYYY, hh:mm A')
         }
     });
 }
@@ -197,11 +238,13 @@ module.exports.sendTradeRequest = function(data, cb) {
             }, []);
             console.log('\x1b[34m', 'TRADEIDS', tradeIds);
 
-            let promisedMail = data[1].map(recep => sendTradeRequestMail(sender, recep, tradeResult, tradeIds));
+            const expiryDate = moment().add(1, 'd');
+
+            let promisedMail = data[1].map(recep => sendTradeRequestMail(sender, recep, tradeResult, tradeIds, expiryDate));
 
             try {
                 mailResult = await Promise.all(promisedMail);
-                TradeEmail.create({ emailId: mailResult[0].messageId, sender: sender._id.$oid, recipients: recipients, trades: tradeIds }).then(emailSaved => {
+                TradeEmail.create({ emailId: mailResult[0].messageId, sender: sender._id.$oid, recipients: recipients, trades: tradeIds, expiry: expiryDate }).then(emailSaved => {
                     console.log('\x1b[35m', 'SAVED', emailSaved);
                     cb(null, emailSaved);
                 }).catch(emailError => {
