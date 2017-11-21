@@ -122,42 +122,42 @@ module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData)
     try {
         const senderEmail = await modelController.getEmail(sender);
         console.log('\x1b[41m', 'VALIDATION SENDER', senderEmail);        
+    
+        console.log('\x1b[45m', tradeData);
+        let url = `${domain}/send/${sender}?`;
+        tradeIds.forEach((id, indx) => {
+            url += `${indx}=${id}&`;
+        });
+        const sendInfo = {
+            from: fromEmail,
+            to: senderEmail,
+        };
+        const email = new EmailTemplate({
+            message: sendInfo,
+            transport: transporter,
+            preview: false,
+            send: true,
+            juice: true,
+            juiceResources: {
+                preserveImportant: true,
+                webResources: {
+                    relativeTo: path.resolve('emails')
+                }
+            },
+            htmlToText: false
+        });
+        return email.send({
+            template: 'trade-send',
+            locals: {
+                sender: senderName,
+                tradeData: tradeData,
+                url: url
+            }
+        });
     } catch(emailError) {
         console.log(emailError);
         return null;
     }
-    
-    console.log('\x1b[45m', tradeData);
-    let url = `${domain}/send/${sender}?`;
-    tradeIds.forEach((id, indx) => {
-        url += `${indx}=${id}&`;
-    });
-    const sendInfo = {
-        from: fromEmail,
-        to: senderEmail,
-    };
-    const email = new EmailTemplate({
-        message: sendInfo,
-        transport: transporter,
-        preview: false,
-        send: true,
-        juice: true,
-        juiceResources: {
-            preserveImportant: true,
-            webResources: {
-                relativeTo: path.resolve('emails')
-            }
-        },
-        htmlToText: false
-    });
-    return email.send({
-        template: 'trade-send',
-        locals: {
-            sender: senderName,
-            tradeData: tradeData,
-            url: url
-        }
-    });
 };
 
 function sendTradeRequestMail(sender, recipient, tradeData, tradeIds, expiryDate) {
