@@ -28,8 +28,8 @@ module.exports.sendPasswordResetEmail = async function(savedUser) {
             to: savedUser.email
         },
         transport: transporter,
-        preview: true,
-        send: false,
+        preview: false,
+        send: true,
         juice: true,
         juiceResources: {
             preserveImportant: true,
@@ -56,8 +56,8 @@ module.exports.sendPasswordConfirmEmail = async function(savedUser) {
             to: savedUser.email
         },
         transport: transporter,
-        preview: true,
-        send: false,
+        preview: false,
+        send: true,
         juice: true,
         juiceResources: {
             preserveImportant: true,
@@ -91,8 +91,8 @@ module.exports.sendDeclineEmail = async function(recipients, tradeData, tradeEma
         const email = new EmailTemplate({
             message: sendInfo,
             transport: transporter,
-            preview: true,
-            send: false,
+            preview: false,
+            send: true,
             juice: true,
             juiceResources: {
                 preserveImportant: true,
@@ -193,8 +193,8 @@ function sendTradeRequestMail(sender, recipient, tradeData, tradeIds, expiryDate
     const email = new EmailTemplate({
         message: sendInfo,
         transport: transporter,
-        preview: true,
-        send: false,
+        preview: false,
+        send: true,
         juice: true,
         juiceResources: {
             preserveImportant: true,
