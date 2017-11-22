@@ -1,6 +1,6 @@
 'use strict';
 const TradeBot = require('./tradebot');
-const channel = 'G7TEGSZTL';
+const channel = 'C0RV5M79C';
 const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 const modelController = require('../schemas/controller.js');
 const fs = require('fs');
@@ -110,7 +110,7 @@ module.exports.sendTradeMessage = async function(data, cb) {
             const commonError = 'message not sent due to connection trouble';
             if(messageError.message === commonError) {
                 console.log('\x1b[15m','ERROR', messageError.name);
-                cb('Try');
+                cb(null, {type: 'commonError', message: messageError});
             } else {
                 cb(messageError);
             }           
