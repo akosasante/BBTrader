@@ -3,7 +3,7 @@
 //Bot
 const RtmClient = require('@slack/client').RtmClient;
 const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
-const TradeBot = new RtmClient(process.env.SLACK_BOT_TOKEN);
+const TradeBot = new RtmClient(process.env.SLACK_BOT_TOKEN, { logLevel: 'info' });
 
 // The client will emit an RTM.AUTHENTICATED event on successful connection, with the `rtm.start` payload
 TradeBot.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
@@ -20,7 +20,5 @@ TradeBot.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
 // //   TradeBot.sendMessage("Hello!", channel);
 //     console.log("CONNECTED TO SLACK");
 // });
- 
-// TradeBot.start();
 
 module.exports = TradeBot;

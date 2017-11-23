@@ -1,9 +1,8 @@
 'use strict';
-const TradeBot = require('./tradebot');
-const channel = 'C0RV5M79C';
-const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
+const TradeBot = require('./slackbot');
+// const channel = 'G7TEGSZTL';
+// const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 const modelController = require('../schemas/controller.js');
-const fs = require('fs');
 
 // const IncomingWebhook = require("@slack/client").IncomingWebhook;
 
@@ -13,6 +12,7 @@ const fs = require('fs');
 
 
 module.exports.sendTradeMessage = async function(data, cb) {
+    // TradeBot.connect('wss://mpmulti-n3vk.lb.slack-msgs.com/websocket/Httr_bw-1eSCoS2hW_BuwfALb2-g89ViefJrIDCoktEtcs7ruw1FGVkbYuO-1tqNld_Euv8Mvk72OBImReBKu0sUa7aw44kV6X6EvBBVdcBuJgr3GZg1-aT3aDGLZAOIizd4lwQ3pq84aDW6FY-_GgMBRgC6n5XhwWHjDPwOVSo=');
     // console.log("TRADING");
     let recipients = [];
     // console.log('\x1b[45m', 'HEEEERE', data.trades);
@@ -86,7 +86,7 @@ module.exports.sendTradeMessage = async function(data, cb) {
             }, [])
             .filter(tradeObj => tradeObj.picks)
             .reduce((str, curr) => {
-                return str += `${curr.picks.map(pick => `${pick.pick}'s _round ${pick.round}_ pick`).join(', ')} _(from ${curr.sender.name});  `;
+                return str += `${curr.picks.map(pick => `${pick.pick}'s _round ${pick.round}_ pick`).join(', ')} _(from ${curr.sender.name})_;  `;
             }, '');
         const picksText = picksReceived || 'None';
 
@@ -99,24 +99,15 @@ module.exports.sendTradeMessage = async function(data, cb) {
         *Picks:* 
             ${picksText}`;
     });
-    console.log('\x1b[41m', 'T', text);
-    TradeBot.start();
-    TradeBot.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function () {
-        console.log('CONNECTED TO SLACK');
-        TradeBot.sendMessage(text, channel).then(response => {
-            console.log(response);
-            cb(null, 'GOOD');
-        }).catch(messageError => {
-            const commonError = 'message not sent due to connection trouble';
-            if(messageError.message === commonError) {
-                console.log('\x1b[15m','ERROR', messageError.name);
-                cb(null, {type: 'commonError', message: messageError});
-            } else {
-                cb(messageError);
-            }           
-            
-        });
-    });
+
+    // console.log('\x1b[41m', 'T', text);
+    try {
+        TradeBot.sendMessage(text);
+        cb(null, 'this is a hack');
+    } catch(err) {
+        console.error(err);
+        cb(err);
+    }
     
     
     //figure out if tradebot has promise or what
