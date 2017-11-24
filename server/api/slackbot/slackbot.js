@@ -1,6 +1,7 @@
 'use strict';
 
 const SlackBot = require('slackbots');
+const announcementsChannel = 'C0RV5M79C'
 
 module.exports.sendMessage = function(text) {
     const TradeBotTwo = new SlackBot({
@@ -11,7 +12,7 @@ module.exports.sendMessage = function(text) {
         const params = {
             icon_emoji: ':baseball:'
         };
-        console.log('connected');
-        return TradeBotTwo.postMessage('G7TEGSZTL', text, params);
+        console.log(announcementsChannel);
+        return TradeBotTwo.postMessage(announcementsChannel, text, params);
     });
 };
