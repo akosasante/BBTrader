@@ -1,7 +1,7 @@
 'use strict';
 
 const SlackBot = require('slackbots');
-const announcementsChannel = 'C0RV5M79C'
+const announcementsChannel = 'C84UJAX5Y'
 
 module.exports.sendMessage = function(text) {
     const TradeBotTwo = new SlackBot({
