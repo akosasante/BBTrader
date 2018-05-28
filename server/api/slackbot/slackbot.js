@@ -1,7 +1,7 @@
 'use strict';
 
 const SlackBot = require('slackbots');
-const announcementsChannel = 'C84UJAX5Y';
+const announcementsChannel = process.env.FF_TRADE_ANNOUNCEMENT_CHANNEL_ID;
 
 module.exports.sendMessage = function(text) {
     const TradeBotTwo = new SlackBot({
@@ -12,7 +12,16 @@ module.exports.sendMessage = function(text) {
         const params = {
             icon_emoji: ':baseball:'
         };
-        console.log(announcementsChannel);
-        return TradeBotTwo.postMessage(announcementsChannel, text, params);
+        if(process.env.NODE_ENV === 'development') {
+            return TradeBotTwo.openIm(process.env.PRIVATE_TEST_IM_CHANNEL_ID)
+                .then(response => {
+                    const channelId = response.channel.id;
+                    return TradeBotTwo.postMessage(channelId, text, params)
+                        .then(console.log)
+                        .error(console.error);
+                })
+        } else {
+            return TradeBotTwo.postMessage(announcementsChannel, text, params);
+        }
     });
 };

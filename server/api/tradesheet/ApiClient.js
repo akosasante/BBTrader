@@ -36,19 +36,51 @@ class SpreadsheetAPI {
         });
     }
 
-    appendToSheet(range, data, cb) {
-        const appendRequest = {
-            spreadsheetId: this.sheetId,
-            range: range,
-            auth: this.authClient,
-            valueInputOption: "USER_ENTERED",
-            includeValuesInResponse: true,
-            insertDataOption: "INSERT_ROWS",
-            resource: {
-                values: data
+    appendToSheet(data, cb) {
+        const WORKSHEET_INDEX = process.env.NODE_ENV === 'development' ? process.env.WORKSHEET_ID_DEV : process.env.WORKSHEET_ID_PROD;
+        const START_ROW_INDEX = 1;
+        const END_ROW_INDEX = 2;
+        const START_COLUMN_INDEX = 0;
+
+        /* We will insert the new empty rows on the sheet indicated by 0-index,
+ starting at START_ROW_INDEX (inclusive) and stopping by END_ROW_INDEX (exclusive)
+        */
+        const insertEmptyValuesRequest = {
+            insertDimension: {
+                range: {
+                    sheetId: WORKSHEET_INDEX,
+                    dimension: "ROWS",
+                    startIndex: START_ROW_INDEX,
+                    endIndex: END_ROW_INDEX
+                }
             }
         };
-        this.sheets.spreadsheets.values.append(appendRequest, cb);
+        const insertTradeDataRequest = {
+            updateCells: {
+                rows: [
+                    { values: [
+                        data.map(datum => ({ userEnteredValue: { stringValue: datum } }))
+                        ]
+                    }
+                ],
+                start: {
+                    sheetId: WORKSHEET_INDEX,
+                    rowIndex: START_ROW_INDEX,
+                    columnIndex: START_COLUMN_INDEX
+                },
+                fields: "*"
+            }
+        };
+
+        const batchUpdateRequest = {
+            spreadsheetId: this.sheetId,
+            auth: this.authClient,
+            resource: {
+                requests: [insertEmptyValuesRequest, insertTradeDataRequest]
+            }
+        };
+
+        this.sheets.spreadsheets.batchUpdate(batchUpdateRequest, cb);
     }
 }
 

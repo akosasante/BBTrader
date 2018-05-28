@@ -27,7 +27,7 @@ slackbotRouter.route('/postTrade')
                     }
                     return arr;
                 }, []);
-                sheetClient.appendToSheet('COPY!A1:P1', [data], function(error, response) {
+                sheetClient.appendToSheet(data, function(error, response) {
                     if(error) {
                         console.error(error);
                         return;
