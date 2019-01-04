@@ -46,3 +46,4 @@ server/emails/tmp/*.html
 **/players.json
 client/src/stores/PlayersStore.js
 players.json
+creds.json

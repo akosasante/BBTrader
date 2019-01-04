@@ -1,9 +1,7 @@
 export default {
     members: [
-        { "_id": { "$oid": "5a007835003ece72d0cac7fc" }, "__v": 0, "name": "Akosua Asante", "username": "helpimtrappedinffff", "email": "tripleabatt@gmail.com" },
-        { "_id": { "$oid": "5a007835003ece72d0cac7fd" }, "__v": 0, "name": "Jatheesh Srikantharajah", "username": "jatheesh", "email": "jatheesh@sympatico.ca" },
-        { "_id": { "$oid": "5a007835003ece72d0cac7fe" }, "__v": 0, "name": "Cam MacInnis", "username": "cam.macinnis", "email": "the.cam.macinnis@gmail.com" },
-        { "_id": { "$oid": "5a007835003ece72d0cac7ff" }, "__v": 0, "name": "Adam Lee", "username": "flex.fox", "email": "adamlee380@hotmail.com" },
+        { "_id": { "$oid": "5a007835003ece72d0cac7fe" }, "__v": 0, "name": "Cam and Jatheesh", "username": "cam.macinnis", "email": "the.cam.macinnis@gmail.com" },
+        { "_id": { "$oid": "5a007835003ece72d0cac7ff" }, "__v": 0, "name": "Flex Fox", "username": "flex.fox", "email": "adamlee380@hotmail.com" },
         { "_id": { "$oid": "5a007835003ece72d0cac800" }, "__v": 0, "name": "Aidan Smith-Edgell", "username": "aidan.smith", "email": "asmithedgell@gmail.com" },
         { "_id": { "$oid": "5a007835003ece72d0cac801" }, "__v": 0, "name": "Ash Sebastian", "username": "a.sebastian13", "email": "ashley-sebastian@hotmail.com" },
         { "_id": { "$oid": "5a007835003ece72d0cac802" }, "__v": 0, "name": "Chris Kennedy", "username": "ckennedy361", "email": "ckennedy361@gmail.com" },

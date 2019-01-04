@@ -3,9 +3,8 @@ const members = {};
 
 members.idToName = {
     '5a007835003ece72d0cac7fc' : 'testkosua',
-    '5a007835003ece72d0cac7fd' :  'Jatheesh Srikantharajah',
-    '5a007835003ece72d0cac7fe' :  'Cam MacInnis',
-    '5a007835003ece72d0cac7ff' :  'Adam Lee',
+    '5a007835003ece72d0cac7fe' :  'Cam and Jatheesh',
+    '5a007835003ece72d0cac7ff' :  'Flex Fox',
     '5a007835003ece72d0cac800' : 'Aidan Smith-Edgell',
     '5a007835003ece72d0cac801' :  'Ash Sebastian',
     '5a007835003ece72d0cac802' :  'Chris Kennedy',
@@ -30,9 +29,8 @@ members.idToName = {
 
 members.nameToId = { 
     'testkosua': '5a007835003ece72d0cac7fc',
-    'Jatheesh Srikantharajah': '5a007835003ece72d0cac7fd',
-    'Cam MacInnis': '5a007835003ece72d0cac7fe',
-    'Adam Lee': '5a007835003ece72d0cac7ff',
+    'Cam and Jatheesh': '5a007835003ece72d0cac7fe',
+    'Flex Fox': '5a007835003ece72d0cac7ff',
     'Aidan Smith-Edgell': '5a007835003ece72d0cac800',
     'Ash Sebastian': '5a007835003ece72d0cac801',
     'Chris Kennedy': '5a007835003ece72d0cac802',
