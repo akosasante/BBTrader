@@ -19,5 +19,7 @@ export default {
         { "_id": { "$oid": "5a007835003ece72d0cac80c" }, "__v": 0, "name": "Richard Tillo", "username": "rtillo", "email": "richardtillo@gmail.com" },
         { "_id": { "$oid": "5a007835003ece72d0cac80e" }, "__v": 0, "name": "Jeremiah Johnson", "username": "jeremiah1993", "email": "jejohnso@uwaterloo.ca" },
         { "_id": { "$oid": "5a007835003ece72d0cac80f" }, "__v": 0, "name": "Ryan Neeson", "username": "Ryan Neeson", "email": "ryan-neeson@hotmail.com" },
+        {"_id":{"$oid":"5c2ec1c2503edf285cba329d"},"name":"Elie Waitzer","username":"ewaitzer","email":"eliewaitzer@gmail.com","userId":"UF5EXG22H"},
+        {"_id":{"$oid":"5c2ec235503edf285cba329e"},"name":"Luc Hamel","username":"Luc Hamel","email":"luchamel34@hotmail.com","userId":"UF46TTE59"},
     ]
 }

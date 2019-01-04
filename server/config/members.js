@@ -23,7 +23,9 @@ members.idToName = {
     '5a007835003ece72d0cac80e' :  'Jeremiah Johnson',
     '5a007835003ece72d0cac80f' :  'Ryan Neeson',
     '5a00784733afd870f7061223' :  'testcam',
-    '5a00787233afd870f7061224' :  'testbot'
+    '5a00787233afd870f7061224' :  'testbot',
+    '5c2ec1c2503edf285cba329d' : 'Elie Waitzer',
+    '5c2ec235503edf285cba329e' : 'Luc Hamel',
 };
 
 members.nameToId = { 
@@ -48,7 +50,9 @@ members.nameToId = {
     'Jeremiah Johnson': '5a007835003ece72d0cac80e',
     'Ryan Neeson': '5a007835003ece72d0cac80f',
     'testcam': '5a00784733afd870f7061223',
-    'testbot': '5a00787233afd870f7061224' 
+    'testbot': '5a00787233afd870f7061224',
+    'Elie Waitzer': '5c2ec1c2503edf285cba329d',
+    'Luc Hamel': '5c2ec235503edf285cba329e',
 };
 
 module.exports = members;
