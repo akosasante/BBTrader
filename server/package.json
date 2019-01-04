@@ -11,10 +11,10 @@
     "dotenv": "^4.0.0",
     "email-templates": "^3.1.6",
     "express": "^4.16.2",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.10",
     "mongoose": "^4.12.6",
     "morgan": "^1.9.0",
-    "node-sass": "^4.5.3",
+    "node-sass": "^4.9.2",
     "nodemailer": "^4.3.1",
     "nodemailer-sendinblue-transport": "^1.2.3",
     "passport": "^0.4.0",
@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "eslint": "^4.10.0",
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.18.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

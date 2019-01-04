@@ -1,4 +1,4 @@
-{"_id":{"$oid":"5a007835003ece72d0cac7fc"},"__v":0,"name":"testkosua","username":"billgatesforhire","email":"tripleabatt@gmail.com","userId":"U7TG0HSKW"}
+{"_id":{"$oid":"5a007835003ece72d0cac7fc"},"__v":0,"name":"Akosua Asante","username":"helpimtrappedinffff","email":"tripleabatt@gmail.com","userId":"U7TG0HSKW"}
 {"_id":{"$oid":"5a007835003ece72d0cac7fd"},"__v":0,"name":"Jatheesh Srikantharajah","username":"jatheesh","email":"jatheesh@sympatico.ca","userId":"U0RV8DD1S"}
 {"_id":{"$oid":"5a007835003ece72d0cac7fe"},"__v":0,"name":"Cam MacInnis","username":"cam.macinnis","email":"the.cam.macinnis@gmail.com","userId":"U0S07R4QG"}
 {"_id":{"$oid":"5a007835003ece72d0cac7ff"},"__v":0,"name":"Adam Lee","username":"flex.fox","email":"adamlee380@hotmail.com","userId":"U0S09K0JE"}
@@ -18,5 +18,3 @@
 {"_id":{"$oid":"5a007835003ece72d0cac80d"},"__v":0,"name":"Wesley Petrierra","username":"wesley","email":"wpeter811@gmail.com","userId":"U0SD4P6Q4"}
 {"_id":{"$oid":"5a007835003ece72d0cac80e"},"__v":0,"name":"Jeremiah Johnson","username":"jeremiah1993","email":"jejohnso@uwaterloo.ca","userId":"U65T580KC"}
 {"_id":{"$oid":"5a007835003ece72d0cac80f"},"__v":0,"name":"Ryan Neeson","username":"Ryan Neeson","email":"ryan-neeson@hotmail.com","userId":"U0S2F7YGJ"}
-{"_id":{"$oid":"5a00784733afd870f7061223"},"name":"testcam","username":"cam.macinnis","email":"tripleabatt+cam@gmail.com","userId":"U0S07R4QG"}
-{"_id":{"$oid":"5a00787233afd870f7061224"},"name":"testbot","username":"testbot","email":"tripleabatt+test@gmail.com","userId":"U7VAJ86M8"}
