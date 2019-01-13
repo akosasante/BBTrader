@@ -25,6 +25,7 @@ members.idToName = {
     '5a00787233afd870f7061224' :  'testbot',
     '5c2ec1c2503edf285cba329d' : 'Elie Waitzer',
     '5c2ec235503edf285cba329e' : 'Luc Hamel',
+    '5c3b7ccb788cfb5cc121cf2d' : 'Benoit Michon'
 };
 
 members.nameToId = { 
@@ -51,6 +52,7 @@ members.nameToId = {
     'testbot': '5a00787233afd870f7061224',
     'Elie Waitzer': '5c2ec1c2503edf285cba329d',
     'Luc Hamel': '5c2ec235503edf285cba329e',
+    'Benoit Michon': '5c3b7ccb788cfb5cc121cf2d'
 };
 
 module.exports = members;
