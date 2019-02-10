@@ -32,17 +32,26 @@ h3.mail-header #{sender} requested the following trade involving you #{recipient
                 .divTableCell
                     if trade.prospects.length > 0
                         each prospect in trade.prospects
-                            p #{prospect.prospect} #[em to] #{prospect.rec}, 
+                            p #{prospect.prospect} #[em to] #{prospect.rec},
                     else
                         p None
             .divTableRow
                 .divTableHead
                     strong Picks
                 .divTableCell
-                    if trade.picks.length > 0
-                        each pick in trade.picks
+                    if trade.picks.major && trade.picks.major.length > 0
+                        p #[strong Major League Draft Picks:]
+                        each pick in trade.picks.major
                             p #[strong Round: ] #{pick.round}, #[strong Pick: ] #{pick.pick} #[em to] #{pick.rec}
-                    else
+                    if trade.picks.high && trade.picks.high.length > 0
+                        p #[strong High Minor Draft Picks:]
+                        each pick in trade.picks.high
+                            p #[strong Round: ] #{pick.round}, #[strong Pick: ] #{pick.pick} #[em to] #{pick.rec}
+                    if trade.picks.low && trade.picks.low.length > 0
+                        p #[strong Low Minor Draft Picks:]
+                        each pick in trade.picks.low
+                            p #[strong Round: ] #{pick.round}, #[strong Pick: ] #{pick.pick} #[em to] #{pick.rec}
+                    if !trade.picks.major && !trade.picks.low && !trade.picks.high
                         p None
     a.link-button(href=`${url}`) Click here to go to the trade confirmation page.
     p #[strong Note:] This trade is valid until #{expiry}.

@@ -118,11 +118,11 @@ module.exports.sendDeclineEmail = async function(recipients, tradeData, tradeEma
 
 module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData) {
     const senderName = membersMap[sender];
-    let senderEmail;
+    // let senderEmail;
     try {
         const senderEmail = await modelController.getEmail(sender);
-        console.log('\x1b[41m', 'VALIDATION SENDER', senderEmail);        
-    
+        console.log('\x1b[41m', 'VALIDATION SENDER', senderEmail);
+
         console.log('\x1b[45m', tradeData);
         let url = `${domain}/send/${sender}?`;
         tradeIds.forEach((id, indx) => {
@@ -172,10 +172,11 @@ function sendTradeRequestMail(sender, recipient, tradeData, tradeIds, expiryDate
             const newProspect = { _id: prospect._id, prospect: prospect.prospect, rec: membersMap[prospect.rec] };
             return newProspect;
         });
-        const picks = trade.picks.map(pick => {
-            const newPick = { _id: pick._id, round: pick.round, pick: pick.pick, rec: membersMap[pick.rec] };
-            return newPick;
-        });
+        const picks = trade.picks.reduce((obj, pick) => {
+            const newPick = { _id: pick._id, round: pick.round, pick: pick.pick, type: pick.type, rec: membersMap[pick.rec] };
+            obj[pick.type] = (obj[pick.type] || []).concat([newPick]);
+            return obj;
+        }, {});
         const newTrade = {sender: senderName, players: players, prospects: prospects, picks: picks};
         // console.log('\x1b[42m', newTrade);
         return newTrade;
