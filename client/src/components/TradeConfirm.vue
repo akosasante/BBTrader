@@ -88,7 +88,7 @@ const example = [
           "prospects":[],
           "players":[{"player":"sfdsfs","rec": {name: "mike"},"_id":"59ff80267b1e4835f36984aa"}]
         }
-        ];
+];
 
 
 async function fetchTrade(tradeIds) {
