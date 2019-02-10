@@ -4,18 +4,33 @@
   <div class="trade-container box">
     <h1 class="heading">Players:</h1>
     <ul class="trade-container__players">
-      <li v-for="player in players">{{player.player}} <strong><em>to</em></strong> {{player.rec.name}}</li>
+      <li v-for="player in players">
+        {{player.player}} <strong><em>to</em></strong> {{player.rec.name}}
+        <button class="delete-button" @click="deleteItem('player', player)">
+          <b-icon class="delete-icon" icon="delete-forever"></b-icon>
+        </button>
+      </li>
     </ul>
     <h1 class="heading">Prospects:</h1>
     <ul class="trade-container__prospects">
-      <li v-for="prospect in prospects">{{prospect.prospect}} <strong><em>to</em></strong> {{prospect.rec.name}}</li>
+      <li v-for="prospect in prospects">
+        {{prospect.prospect}} <strong><em>to</em></strong> {{prospect.rec.name}}
+        <button class="delete-button" @click="deleteItem('prospect', prospect)">
+          <b-icon class="delete-icon" icon="delete-forever"></b-icon>
+        </button>
+      </li>
     </ul>
     <h1 class="heading">Picks:</h1>
     <ul class="trade-container__picks">
-      <li v-for="pick in picks">Round {{pick.round}}, {{pick.pick}}'s pick <strong><em>to</em></strong> {{pick.rec.name}}</li>
+      <li v-for="pick in picks">
+        [{{getRoundName(pick.type)}}] Round {{pick.round}}, {{pick.pick}}'s pick <strong><em>to</em></strong> {{pick.rec.name}}
+        <button class="delete-button" @click="deleteItem('round', pick)">
+          <b-icon class="delete-icon" icon="delete-forever"></b-icon>
+        </button>
+      </li>
     </ul>
   </div>
-  <b-field class="trade-field__grouped" grouped group-multiline>
+  <b-field class="trade-field__grouped trader-stretch" grouped group-multiline>
     <b-field class="trade-label" label="Enter Player">
       <b-input class="trade-input" v-model="inputtedPlayer" @keyup.native.enter="addPlayer" placeholder="Add a player"></b-input>
       <b-select v-if="numPlayers > 2" v-model="playerTo" placeholder="Select a recipient">
@@ -39,7 +54,12 @@
       </p>
     </b-field>
     <b-field class="trade-label" label="Enter Pick">
-      <b-input class="trade-input" v-model="inputtedPickRound" @keyup.native.enter="addPick" placeholder="Round" type="number" min="16" max="25"></b-input>
+      <b-select v-model="roundType" placeholder="Pick Type" @input="clearRoundInputs">
+        <option v-for="type in roundTypes" :value="type">
+          {{ type.display }}
+        </option>
+      </b-select>
+      <b-input class="trade-input" v-model="inputtedPickRound" @keyup.native.enter="addPick" placeholder="Round" type="number" :min="roundMin" :max="roundMax"></b-input>
       <b-select v-model="inputtedPick" placeholder="Pick">
         <option v-for="player in allPlayers" :value="player">
             {{ player.name }}
@@ -64,7 +84,7 @@ import _ from 'lodash'
 
 function updateSavedData(player, tradeType, tradeData) {
   let savedIndex = _.findIndex(TradeStore.data, ['sender', player._id.$oid]);
-  console.log('saving player trde data');
+  console.log('saving player trade data');
   console.log(player);
   //If sender hasn't been saved before, then add them
   if(savedIndex === -1) {
@@ -87,13 +107,19 @@ export default {
       players: [],
       prospects: [],
       picks: [],
+      roundTypes: [
+        {key: "major", display: "Major League"},
+        {key: "high", display: "High Minors"},
+        {key: "low", display: "Low Minors"}
+      ],
       inputtedPlayer: null,
       inputtedProspect: null,
       inputtedPick: null,
       inputtedPickRound: null,
       playerTo: null,
       prospectTo: null,
-      pickTo: null
+      pickTo: null,
+      roundType: {key: "major", display: "Major League"}
     }
   },
   methods: {
@@ -104,10 +130,10 @@ export default {
       if(this.inputtedPlayer && this.playerTo) {
         const player = this.playerTo;
         const trade = { player: this.inputtedPlayer, rec: player };
-        
+
         // console.log(trade);
         this.players.push(trade);
-        updateSavedData(this.player, "players", this.players);        
+        updateSavedData(this.player, "players", this.players);
       } else {
         return this.$snackbar.open({
           message: "Please select the recipient of this player",
@@ -141,7 +167,7 @@ export default {
         this.pickTo = this.traders[0];
       }
       if(this.inputtedPick && this.pickTo && this.inputtedPickRound) {
-        const trade = { pick: this.inputtedPick.name, round: this.inputtedPickRound, rec: this.pickTo };
+        const trade = { pick: this.inputtedPick.name, round: this.inputtedPickRound, rec: this.pickTo, type: this.roundType.key };
         this.picks.push(trade);
         updateSavedData(this.player, "picks", this.picks);
       } else {
@@ -154,38 +180,114 @@ export default {
       this.inputtedPick = null;
       this.inputtedPickRound = null;
       this.pickTo = null;
+    },
+    clearRoundInputs() {
+      this.inputtedPick = null;
+      this.inputtedPickRound = null;
+      this.pickTo = null;
+    },
+    getRoundName(typeKey) {
+      const roundType = this.roundTypes.find(type => type.key === typeKey);
+      return roundType.display;
+    },
+    deleteItem(type, item) {
+      console.log(item);
+      switch (type) {
+        case "player": {
+          this.players = this.players.filter(player => player.player !== item.player);
+          updateSavedData(this.player, "players", this.players);
+          break;
+        }
+        case "prospect": {
+          this.prospects = this.prospects.filter(prospect => prospect.prospect !== item.prospect);
+          v
+          break;
+        }
+        case "round": {
+          this.picks = this.picks.filter(pick => (pick.pick !== item.pick || pick.type !== item.type || pick.round !== item.round));
+          updateSavedData(this.player, "picks", this.picks);
+          break;
+        }
+      }
     }
   },
   computed: {
     traders: function() {
       return this.allTraders.filter(thisPlayer => thisPlayer._id.$oid !== this.player._id.$oid);
-    } 
+    },
+    roundMin: function() {
+      switch (this.roundType.key) {
+        case "major": {
+          return 16;
+        }
+        case "high":
+        case "low": {
+          return 1;
+        }
+      }
+    },
+    roundMax: function() {
+      switch (this.roundType.key) {
+        case "major": {
+          return 25;
+        }
+        case "high": {
+          return 2;
+        }
+        case "low": {
+          return 5;
+        }
+      }
+    }
   }
 }
 </script>
 
 <style>
-.player-trade {
-  margin-top: 3rem;
-}
-.trade-container {
-  min-height: 5rem;
-  min-width: 35rem;
-  /* border-radius: 1rem;
-  border: 0.5rem solid rgba(240, 248, 255, 0.50);
-  background: rgba(240, 248, 255, 0.50); */
-  margin-bottom: 1rem;
-}
-.trade-label {
-  margin-left: 0 !important;
-  max-width: 85vw;
-}
+  .player-trade {
+    margin-top: 3rem;
+  }
+  .trade-container {
+    min-height: 5rem;
+    min-width: 35rem;
+    /* border-radius: 1rem;
+    border: 0.5rem solid rgba(240, 248, 255, 0.50);
+    background: rgba(240, 248, 255, 0.50); */
+    margin-bottom: 1rem;
+  }
+  .trade-label {
+    margin-left: 0 !important;
+    max-width: 85vw;
+  }
 
-.trade-label label {
-  margin-right: 1rem;
-}
+  .trade-label label {
+    margin-right: 1rem;
+  }
 
-.trade-field__grouped {
-  justify-content: space-between !important;
-}
+  .trade-field__grouped {
+    align-items: stretch !important;
+    /*justify-content: space-between !important;*/
+    flex-direction: column;
+  }
+  .trade-label {
+    justify-content: stretch;
+    max-width: 100%;
+  }
+
+  .trade-label .label {
+    min-width: 10%;
+  }
+
+  .trade-label .trade-input {
+    flex-basis: 100%;
+  }
+
+  .delete-button {
+    border: none;
+    padding: 0;
+  }
+  .delete-button:hover {
+    cursor: pointer;
+  }
+
 </style>

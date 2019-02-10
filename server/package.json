@@ -4,26 +4,27 @@
   "description": "Node/Express/Mongo backend for bbtrades",
   "main": "server.js",
   "dependencies": {
-    "@slack/client": "^3.14.1",
+    "@slack/client": "^4.6.0",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.1",
     "cors": "^2.8.4",
     "dotenv": "^4.0.0",
-    "email-templates": "^3.1.6",
+    "email-templates": "^5.0.1",
     "express": "^4.16.2",
-    "lodash": "^4.17.4",
+    "googleapis": "^37.2.0",
+    "lodash": "^4.17.11",
     "mongoose": "^4.12.6",
     "morgan": "^1.9.0",
-    "node-sass": "^4.5.3",
+    "node-sass": "^4.9.4",
     "nodemailer": "^4.3.1",
     "nodemailer-sendinblue-transport": "^1.2.3",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "slackbots": "^1.1.0"
+    "slackbots": "^1.2.0"
   },
   "devDependencies": {
     "eslint": "^4.10.0",
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.18.4"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

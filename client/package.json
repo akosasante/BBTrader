@@ -14,7 +14,7 @@
     "lodash": "^4.17.4",
     "mdi": "^2.0.46",
     "storage-available": "^1.0.0",
-    "vue": "^2.4.4",
+    "vue": "^2.5.17",
     "vue-router": "^3.0.1",
     "vue-spinner": "^1.0.3"
   },

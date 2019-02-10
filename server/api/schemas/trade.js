@@ -17,7 +17,8 @@ var tradeSchema = new Schema({
     picks: [{
         pick: String,
         rec: {type: Schema.Types.ObjectId, ref: 'Player'},
-        round: { type: Number, min: 16, max: 25 }
+        round: { type: Number, min: 1, max: 25 },
+        type: { type: String, enum: ['high', 'low', 'major']}
     }],
     sender: {type: Schema.Types.ObjectId, ref: 'Player'}
 });
