@@ -29,7 +29,7 @@ module.exports.sendTradeMessage = async function(data, cb) {
         cb(err);
     }
     // console.log('\x1b[45m', 'OKOKOKO', data.trades);
-    
+
     // console.log("H", recipients);
     let text = '*A trade has been made!* \n';
     text += '*Participants:* ';
@@ -74,30 +74,105 @@ module.exports.sendTradeMessage = async function(data, cb) {
             }, '');
         const prospectsText = prospectsReceived || 'None';
 
-        const picksReceived = data.trades.map(trade => [trade.sender, trade.picks.filter(pick => pick.rec.userId === recip)])
-            .reduce((arr, curr) => {
-                let obj = {};
-                obj.sender = curr[0];
-                if(curr[1].length > 0) {
-                    obj.picks = curr[1].map(picks => ({pick: picks.pick, round: picks.round}));
-                }
-                arr.push(obj);
-                return arr;
-            }, [])
-            .filter(tradeObj => tradeObj.picks)
-            .reduce((str, curr) => {
-                return str += `${curr.picks.map(pick => `${pick.pick}'s _round ${pick.round}_ pick`).join(', ')} _(from ${curr.sender.name})_;  `;
+        const picksBySender = data.trades.reduce((picksReceived, trade) => {
+            const received = trade.picks.filter(pick => pick.rec.userId === recip); // Only the picks sent to this recip
+            picksReceived[trade.sender.name] = received;
+            return picksReceived;
+        }, {}); // {sender_name: [picks_received], sender_name: [picks_received]}
+
+        const picksByTypeBySender = Object.entries(picksBySender).reduce((obj, [sender, picks]) => {
+            picks.forEach(pick => {
+                obj[pick.type] = obj[pick.type] || {};
+                obj[pick.type][sender] = (obj[pick.type][sender] || []).concat(pick);
+            });
+            return obj;
+        }, {}); // { major: {sender1: [], sender2: []}, minor: {sender1: []} }
+        const pickFormat = pick => `${pick.pick}'s _round ${pick.round}_ pick`;
+        // const picksString = Object.keys(picksByTypeBySender).reduce((str, type) => {
+
+
+        //     const picksBySender = picksByTypeBySender[type];  // {sender1: [], sender2: []}
+        //     str += type === 'major' ? '\n*Major League Picks*' :
+        //         type === 'high' ? '\n*High Minors Picks*' :
+        //             type === 'low' ? '\n*Low Minors Picks*' : '';
+        //     str += ':\n';
+        //     str += Object.entries(picksBySender).reduce((acc, [sender, picks])=> {
+        //         acc += picks.map(pickFormat).join(', ');
+        //         acc += ` _(from ${sender})_ `;
+        //         return acc;
+        //     }, '');
+        //     console.log('str: ' + str);
+        //     return str;
+        // }, '');
+
+        let majorString = '';
+        let highString = '';
+        let lowString = '';
+
+        if (picksByTypeBySender.major && (Object.keys(picksByTypeBySender.major)).length) {
+            const picks = Object.entries(picksByTypeBySender.major).reduce((acc, [sender, picks], idx)=> {
+                acc += picks.map(pickFormat).join(', ');
+                acc += ` _(from ${sender})_ `;
+                acc += (idx + 1) === (Object.keys(picksByTypeBySender.major)).length ? '' : ', ';
+                return acc;
             }, '');
-        const picksText = picksReceived || 'None';
+            majorString = `*Major League Picks:*
+                ${picks}`;
+        }
+        if (picksByTypeBySender.high && (Object.keys(picksByTypeBySender.high)).length) {
+            const picks = Object.entries(picksByTypeBySender.high).reduce((acc, [sender, picks], idx)=> {
+                acc += picks.map(pickFormat).join(', ');
+                acc += ` _(from ${sender})_ `;
+                acc += (idx + 1) === (Object.keys(picksByTypeBySender.high)).length? '' : ', ';
+                return acc;
+            }, '');
+            highString = `*High Minors Picks:*
+                ${picks}`;
+        }
+
+        if (picksByTypeBySender.low && (Object.keys(picksByTypeBySender.low)).length) {
+            const picks = Object.entries(picksByTypeBySender.low).reduce((acc, [sender, picks], idx)=> {
+                acc += picks.map(pickFormat).join(', ');
+                acc += ` _(from ${sender})_ `;
+                acc += (idx + 1) === (Object.keys(picksByTypeBySender.low)).length ? '' : ', ';
+                return acc;
+            }, '');
+            lowString = `*Low Minors Picks:*
+                ${picks}`;
+        }
+
+        console.log(majorString);
+        const picksString = `${majorString || ''}
+            ${highString || ''}
+            ${lowString || ''}`;
+        console.log(`str: ${picksString}`);
+
+
+        // const picksReceived = data.trades.map(trade => [trade.sender, trade.picks.filter(pick => pick.rec.userId === recip)])
+        //     .reduce((arr, curr) => {
+        //         let obj = {};
+        //         obj.sender = curr[0];
+        //         if(curr[1].length > 0) {
+        //             obj.picks = curr[1].map(picks => ({pick: picks.pick, round: picks.round}));
+        //         }
+        //         arr.push(obj);
+        //         return arr;
+        //     }, [])
+        //     .filter(tradeObj => tradeObj.picks)
+        //     .reduce((str, curr) => {
+        //         return str += `${curr.picks.map(pick => `${pick.pick}'s _round ${pick.round}_ pick`).join(', ')} _(from ${curr.sender.name})_;  `;
+        //     }, '');
+        const picksText = picksString || 'None';
 
         text += '\n';
         text += `*To:* <@${recip}>:
-        *Players:* 
+        *Players:*
             ${playersText}
-        *Prospects:* 
+        *Prospects:*
             ${prospectsText}
-        *Picks:* 
-            ${picksText}`;
+        *Picks:*
+            ${picksText.trimLeft()}
+            `;
     });
 
     // console.log('\x1b[41m', 'T', text);
@@ -108,8 +183,8 @@ module.exports.sendTradeMessage = async function(data, cb) {
         console.error(err);
         cb(err);
     }
-    
-    
+
+
     //figure out if tradebot has promise or what
 
 };

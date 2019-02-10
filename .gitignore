@@ -43,3 +43,4 @@ client/node_modules/
 client/node_modules/**
 server/emails/tmp/*.html
 **/.env
+creds.json

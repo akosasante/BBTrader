@@ -10,10 +10,14 @@ class SpreadsheetAPI {
 
     async getSheetsClient() {
         if(!this.authClient) {
-            this.authClient = await google.auth.getClient({
-                keyFile: path.join(__dirname, '../../../', 'creds.json'),
-                scopes: 'https://www.googleapis.com/auth/spreadsheets'
-            });
+            try {
+                this.authClient = await google.auth.getClient({
+                    keyFile: path.join(__dirname, '../../../', 'creds.json'),
+                    scopes: 'https://www.googleapis.com/auth/spreadsheets'
+                });
+            } catch(e) {
+                console.error(e);
+            }
         }
         if(!this.sheets) {
             this.sheets = google.sheets({version: 'v4', auth: this.authClient});
@@ -49,7 +53,7 @@ class SpreadsheetAPI {
             insertDimension: {
                 range: {
                     sheetId: WORKSHEET_INDEX,
-                    dimension: "ROWS",
+                    dimension: 'ROWS',
                     startIndex: START_ROW_INDEX,
                     endIndex: END_ROW_INDEX
                 }
@@ -59,8 +63,7 @@ class SpreadsheetAPI {
             updateCells: {
                 rows: [
                     { values: [
-                        data.map(datum => ({ userEnteredValue: { stringValue: datum } }))
-                        ]
+                        data.map(datum => ({ userEnteredValue: { stringValue: datum } }))]
                     }
                 ],
                 start: {
@@ -68,7 +71,7 @@ class SpreadsheetAPI {
                     rowIndex: START_ROW_INDEX,
                     columnIndex: START_COLUMN_INDEX
                 },
-                fields: "*"
+                fields: '*'
             }
         };
 
