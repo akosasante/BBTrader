@@ -122,6 +122,13 @@ module.exports.sendValidationEmail = async function(sender, tradeIds, tradeData)
     try {
         const senderEmail = await modelController.getEmail(sender);
         console.log('\x1b[41m', 'VALIDATION SENDER', senderEmail);
+        tradeData = tradeData.map(trade => {
+            trade.picks = trade.picks.reduce((obj, pick) => {
+                obj[pick.type] = (obj[pick.type] || []).concat([pick]);
+                return obj;
+            }, {});
+            return trade;
+        });
 
         console.log('\x1b[45m', tradeData);
         let url = `${domain}/send/${sender}?`;

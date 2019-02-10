@@ -23,14 +23,26 @@ each trade in tradeData
         |
     |
     | Picks:
-    if trade.picks.length > 0
-        each pick in trade.picks
-            |  Round #{pick.round}, Pick #{pick.pick} to #{pick.rec.name}
+    |
+    if trade.picks.major && trade.picks.major.length > 0
+        | Major League Draft Picks:
+        each pick in trade.picks.major
+            | Round #{pick.round}, Pick #{pick.pick} to #{pick.rec.name}
             |
-    else
+    if trade.picks.high && trade.picks.high.length > 0
+        | High Minor Draft Picks:
+        each pick in trade.picks.high
+            | Round #{pick.round}, Pick #{pick.pick} to #{pick.rec.name}
+            |
+    if trade.picks.low && trade.picks.low.length > 0
+        | Low Minor Draft Picks:
+        each pick in trade.picks.low
+            | Round #{pick.round}, Pick #{pick.pick} to #{pick.rec.name}
+            |
+    if !trade.picks.major && !trade.picks.low && !trade.picks.high
         | None
         |
-    
+
     |
     |_____________________
     |
