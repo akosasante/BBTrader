@@ -3,9 +3,8 @@ const members = {};
 
 members.idToName = {
     '5a007835003ece72d0cac7fc' : 'testkosua',
-    '5a007835003ece72d0cac7fd' :  'Jatheesh Srikantharajah',
-    '5a007835003ece72d0cac7fe' :  'Cam MacInnis',
-    '5a007835003ece72d0cac7ff' :  'Adam Lee',
+    '5a007835003ece72d0cac7fe' :  'Cam and Jatheesh',
+    '5a007835003ece72d0cac7ff' :  'Flex Fox',
     '5a007835003ece72d0cac800' : 'Aidan Smith-Edgell',
     '5a007835003ece72d0cac801' :  'Ash Sebastian',
     '5a007835003ece72d0cac802' :  'Chris Kennedy',
@@ -23,14 +22,16 @@ members.idToName = {
     '5a007835003ece72d0cac80e' :  'Jeremiah Johnson',
     '5a007835003ece72d0cac80f' :  'Ryan Neeson',
     '5a00784733afd870f7061223' :  'testcam',
-    '5a00787233afd870f7061224' :  'testbot'
+    '5a00787233afd870f7061224' :  'testbot',
+    '5c2ec1c2503edf285cba329d' : 'Elie Waitzer',
+    '5c2ec235503edf285cba329e' : 'Luc Hamel',
+    '5c3b7ccb788cfb5cc121cf2d' : 'Benoit Michon'
 };
 
 members.nameToId = { 
     'testkosua': '5a007835003ece72d0cac7fc',
-    'Jatheesh Srikantharajah': '5a007835003ece72d0cac7fd',
-    'Cam MacInnis': '5a007835003ece72d0cac7fe',
-    'Adam Lee': '5a007835003ece72d0cac7ff',
+    'Cam and Jatheesh': '5a007835003ece72d0cac7fe',
+    'Flex Fox': '5a007835003ece72d0cac7ff',
     'Aidan Smith-Edgell': '5a007835003ece72d0cac800',
     'Ash Sebastian': '5a007835003ece72d0cac801',
     'Chris Kennedy': '5a007835003ece72d0cac802',
@@ -48,7 +49,10 @@ members.nameToId = {
     'Jeremiah Johnson': '5a007835003ece72d0cac80e',
     'Ryan Neeson': '5a007835003ece72d0cac80f',
     'testcam': '5a00784733afd870f7061223',
-    'testbot': '5a00787233afd870f7061224' 
+    'testbot': '5a00787233afd870f7061224',
+    'Elie Waitzer': '5c2ec1c2503edf285cba329d',
+    'Luc Hamel': '5c2ec235503edf285cba329e',
+    'Benoit Michon': '5c3b7ccb788cfb5cc121cf2d'
 };
 
 module.exports = members;

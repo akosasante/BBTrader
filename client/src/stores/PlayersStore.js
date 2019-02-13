@@ -1,9 +1,7 @@
 export default {
     members: [
-        { "_id": { "$oid": "5a007835003ece72d0cac7fc" }, "__v": 0, "name": "testkosua", "username": "billgatesforhire", "email": "tripleabatt@gmail.com" },
-        { "_id": { "$oid": "5a007835003ece72d0cac7fd" }, "__v": 0, "name": "Jatheesh Srikantharajah", "username": "jatheesh", "email": "jatheesh@sympatico.ca" },
-        { "_id": { "$oid": "5a007835003ece72d0cac7fe" }, "__v": 0, "name": "Cam MacInnis", "username": "cam.macinnis", "email": "the.cam.macinnis@gmail.com" },
-        { "_id": { "$oid": "5a007835003ece72d0cac7ff" }, "__v": 0, "name": "Adam Lee", "username": "flex.fox", "email": "adamlee380@hotmail.com" },
+        { "_id": { "$oid": "5a007835003ece72d0cac7fe" }, "__v": 0, "name": "Cam and Jatheesh", "username": "cam.macinnis", "email": "the.cam.macinnis@gmail.com" },
+        { "_id": { "$oid": "5a007835003ece72d0cac7ff" }, "__v": 0, "name": "Flex Fox", "username": "flex.fox", "email": "adamlee380@hotmail.com" },
         { "_id": { "$oid": "5a007835003ece72d0cac800" }, "__v": 0, "name": "Aidan Smith-Edgell", "username": "aidan.smith", "email": "asmithedgell@gmail.com" },
         { "_id": { "$oid": "5a007835003ece72d0cac801" }, "__v": 0, "name": "Ash Sebastian", "username": "a.sebastian13", "email": "ashley-sebastian@hotmail.com" },
         { "_id": { "$oid": "5a007835003ece72d0cac802" }, "__v": 0, "name": "Chris Kennedy", "username": "ckennedy361", "email": "ckennedy361@gmail.com" },
@@ -17,11 +15,10 @@ export default {
         { "_id": { "$oid": "5a007835003ece72d0cac80a" }, "__v": 0, "name": "Nick Penner", "username": "nickpenner", "email": "penner_nick@yahoo.ca" },
         { "_id": { "$oid": "5a007835003ece72d0cac80b" }, "__v": 0, "name": "Richard Kelly-Ruetz", "username": "rkellyru", "email": "kelly-ruetz@hotmail.com" },
         { "_id": { "$oid": "5a007835003ece72d0cac80c" }, "__v": 0, "name": "Richard Tillo", "username": "rtillo", "email": "richardtillo@gmail.com" },
-        { "_id": { "$oid": "5a007835003ece72d0cac80d" }, "__v": 0, "name": "Wesley Petrierra", "username": "wesley", "email": "wpeter811@gmail.com" },
         { "_id": { "$oid": "5a007835003ece72d0cac80e" }, "__v": 0, "name": "Jeremiah Johnson", "username": "jeremiah1993", "email": "jejohnso@uwaterloo.ca" },
         { "_id": { "$oid": "5a007835003ece72d0cac80f" }, "__v": 0, "name": "Ryan Neeson", "username": "Ryan Neeson", "email": "ryan-neeson@hotmail.com" },
-        { "_id": { "$oid": "5a00784733afd870f7061223" }, "name": "testcam", "username": "cam.macinnis", "email": "tripleabatt+cam@gmail.com" },
-        { "_id": { "$oid": "5a00787233afd870f7061224" }, "name": "testbot", "username": "testbot", "email": "tripleabatt+test@gmail.com" },
-
+        {"_id":{"$oid":"5c2ec1c2503edf285cba329d"},"name":"Elie Waitzer","username":"ewaitzer","email":"eliewaitzer@gmail.com","userId":"UF5EXG22H"},
+        {"_id":{"$oid":"5c2ec235503edf285cba329e"},"name":"Luc Hamel","username":"Luc Hamel","email":"luchamel34@hotmail.com","userId":"UF46TTE59"},
+        {"_id":{"$oid":"5c3b7ccb788cfb5cc121cf2d"},"name" : "Benoit Michon", "username" : "Ben", "email" : "tiben0920@gmail.com", "userId" : "UF9T2T9U3"},
     ]
 }

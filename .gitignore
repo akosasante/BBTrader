@@ -43,4 +43,7 @@ client/node_modules/
 client/node_modules/**
 server/emails/tmp/*.html
 **/.env
+**/players.json
+client/src/stores/PlayersStore.js
+players.json
 creds.json
