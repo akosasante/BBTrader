@@ -1,21 +1,9 @@
 'use strict';
 const TradeBot = require('./slackbot');
-// const channel = 'G7TEGSZTL';
-// const CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 const modelController = require('../schemas/controller.js');
 
-// const IncomingWebhook = require("@slack/client").IncomingWebhook;
-
-//TODO: hide the url later
-// const url = "https://hooks.slack.com/services/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";
-// const webhook = new IncomingWebhook(url);
-
-
 module.exports.sendTradeMessage = async function(data, cb) {
-    // TradeBot.connect('wss://mpmulti-n3vk.lb.slack-msgs.com/websocket/Httr_bw-1eSCoS2hW_BuwfALb2-g89ViefJrIDCoktEtcs7ruw1FGVkbYuO-1tqNld_Euv8Mvk72OBImReBKu0sUa7aw44kV6X6EvBBVdcBuJgr3GZg1-aT3aDGLZAOIizd4lwQ3pq84aDW6FY-_GgMBRgC6n5XhwWHjDPwOVSo=');
-    // console.log("TRADING");
     let recipients = [];
-    // console.log('\x1b[45m', 'HEEEERE', data.trades);
 
     try {
         let tradeRec = await modelController.getRecipients(data.trades);
@@ -28,9 +16,7 @@ module.exports.sendTradeMessage = async function(data, cb) {
         console.log('ERROR', err);
         cb(err);
     }
-    // console.log('\x1b[45m', 'OKOKOKO', data.trades);
 
-    // console.log("H", recipients);
     let text = '*A trade has been made!* \n';
     text += '*Participants:* ';
     recipients.forEach((recip, idx) => {
