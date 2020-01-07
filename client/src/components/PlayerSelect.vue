@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     filteredPlayers: function() {
-      return this.players.filter(player => player.name !== this.defaultPlayer.name).filter(player => player.name.toLowerCase().startsWith(this.selectedPlayer))
+      return this.players.filter(player => player.name !== this.defaultPlayer.name).filter(player => player.name.toLowerCase().startsWith(this.selectedPlayer)).sort((playerA, playerB) => playerA.name.localeCompare(playerB.name))
     }
   },
   methods: {
