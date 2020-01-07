@@ -1,11 +1,12 @@
 const fs = require("fs");
 
-if (process.argv.length < 4) {
-  console.error('Expected at least 2 arguments!');
+if (process.argv.length < 5) {
+  console.error('Expected at least 3 arguments!');
   process.exit(1);
 } else {
   const json_members_path = process.argv[2];
-  const save_path = process.argv[3];
+  const save_path_server = process.argv[3];
+  const save_path_client = process.argv[4];
   const json_members_string = fs.readFileSync(json_members_path, "utf8");
   const members_array = process_json_members(json_members_string);
   const cleaned_members = clean_members(members_array);
@@ -13,8 +14,10 @@ if (process.argv.length < 4) {
   const inverted_members_array = invert_members(format_members_array);
   const format_members_object = array_to_object(format_members_array);
   const inverted_members_object = array_to_object(inverted_members_array);
-  const jsString = members_js_string(format_members_object, inverted_members_object);
-  fs.writeFileSync(save_path, jsString)
+  const jsStringServer = members_js_string(format_members_object, inverted_members_object);
+  const jsStringClient = members_store_string(cleaned_members);
+  fs.writeFileSync(save_path_server, jsStringServer);
+  fs.writeFileSync(save_path_client, jsStringClient);
 }
 
 function process_json_members(str) {
@@ -66,4 +69,10 @@ members.nameToId = ${JSON.stringify(inverted_members, null, 4)};
 
 module.exports = members;
   `
+}
+
+function members_store_string(clean_members_array) {
+  return `export default {
+      members: ${JSON.stringify(clean_members_array, null, 4)}
+  }`
 }

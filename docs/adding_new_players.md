@@ -15,8 +15,8 @@ Using mongo server/client:
 7. Exit back to terminal.
 8. Export the existing collection: `mongoexport --db ${table_name} --collection players --out ${filename}.json`
 9. Make a copy of the exported collection JSON to add or update any rows. If a new ObjectId is required for a new player, use the one generated earlier. NOTE: Keep old copy as backup!
-10. Run `node update_members ${new_exported_json} ${file_path_to_save}`
-11. Confirm that the exported file looks good and save it to `server/config/members.js`
+10. Run `node update_members ${new_exported_json} ${new_members_file_path} ${new_client_members_file_path}`
+11. Confirm that the exported files look good and save them to `server/config/members.js` and `client/src/stores/PlayerStore.js` respectively
 
 
 **Note:** New users will have to use the `/register` endpoint to set up their password.
