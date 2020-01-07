@@ -20,3 +20,5 @@ Using mongo server/client:
 
 
 **Note:** New users will have to use the `/register` endpoint to set up their password.
+
+**Note:** Update to PlayerStore.js won't be seen until the client distributable is rebuild via `npm run build`
