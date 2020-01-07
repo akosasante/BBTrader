@@ -23,7 +23,7 @@
     "slackbots": "^1.1.0"
   },
   "devDependencies": {
-    "eslint": "^4.10.0",
+    "eslint": "^4.18.2",
     "nodemon": "^1.18.3"
   },
   "scripts": {
