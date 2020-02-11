@@ -16,7 +16,7 @@ export default {
             "$oid": "5a007835003ece72d0cac7ff"
         },
         "__v": 0,
-        "name": "Adam Lee",
+        "name": "Flex Fox",
         "username": "flex.fox",
         "email": "adamlee380@hotmail.com",
         "userId": "U0S09K0JE",
@@ -187,13 +187,13 @@ export default {
     },
     {
         "_id": {
-            "$oid": "5c2ec235503edf285cba329e"
+            "$oid": "5c2ec1c2503edf285cba329d"
         },
-        "name": "Luc Hamel",
-        "username": "Luc Hamel",
-        "email": "luchamel34@hotmail.com",
-        "userId": "UF46TTE59",
-        "password": "$2a$08$0ve4DpiRweflfHDpQ8n7zeLi0i/4cx9SRtR71Ji4f17A72/YrnocO"
+        "name": "Elie Waitzer",
+        "username": "ewaitzer",
+        "email": "eliewaitzer@gmail.com",
+        "userId": "UF5EXG22H",
+        "password": "$2a$08$E.Pp67hR3a9M6ZIVPV4JaeSLAph1ef4ejPJhgdq2jp0WuM1cboYfa"
     },
     {
         "_id": {
@@ -213,7 +213,16 @@ export default {
         "username": "Graeme",
         "email": "gkembel1987@gmail.com",
         "userId": "USD7999BR",
-        "password": ""
+        "password": "$2a$08$IKyj72TaE252HwwOALTrGeeIgOPYiPEf354jgVMqO1Q4.khjcSlGq"
+    },
+    {
+        "_id": {
+            "$oid": "5e41fb428f5a0fb4063d1d9f"
+        },
+        "name": "Cam Christie",
+        "username": "",
+        "email": "camchristie123@gmail.com",
+        "userId": "UTHNKSP1P"
     }
 ]
   }
