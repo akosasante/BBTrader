@@ -14,8 +14,8 @@ Using mongo server/client:
 6. (Only if creating new user). `ObjectId()` to generate a new object ID. Copy this for use in step 9
 7. Exit back to terminal.
 8. Export the existing collection: `mongoexport --db ${db_name} --collection players --out ${filename}.json`
-9. Make a copy of the exported collection JSON to add or update any rows. If a new ObjectId is required for a new player, use the one generated earlier. NOTE: Keep old copy as backup!
-10. Run `node update_members ${new_exported_json} ${new_members_file_path} ${new_client_members_file_path}`
+9. Make a copy of the exported collection JSON to add or update any rows. If a new ObjectId is required for a new player, use the one generated earlier. Can also edit these rows directly in mongo. NOTE: Keep old copy as backup!
+10. Run `node update_members ${new_exported_json} ${new_members_file_path} ${new_client_members_file_path}` (Backup old files first)
 11. Confirm that the exported files look good and save them to `server/config/members.js` and `client/src/stores/PlayerStore.js` respectively
 
 
