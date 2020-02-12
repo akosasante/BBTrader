@@ -152,7 +152,7 @@ export default {
               //         "This trade has expired, you cannot accept/decline it anymore" : "This trade was declined; it is no longer valid";
               this.expired = true;
             }
-            return this.$snackbar.open({
+            return this.$buefy.snackbar.open({
               message: msg,
               type: "is-warning",
               position: "is-top-right"
@@ -169,7 +169,7 @@ export default {
       this.$http.post(`/models/updateConfirmation`, confirmationData)
         .then(resp => {
           console.log(resp);
-          this.$snackbar.open({
+          this.$buefy.snackbar.open({
             message: "You have confirmed the details of this trade. Once all participants have done so, the original trade requester will submit the trade to slack.",
             type: "is-light",
             position: "is-top-right"
@@ -181,7 +181,7 @@ export default {
           return resp.data.response;
         })
         .catch(err => {
-          this.$snackbar.open({
+          this.$buefy.snackbar.open({
             message: "Something went wrong. Please refresh the page and try again, or contact your commissioner.",
             type: "is-warning",
             position: "is-top-right"
@@ -200,7 +200,7 @@ export default {
       this.$http.post(`/models/declineTrade`, declinationData)
         .then(resp => {
           console.log(resp);
-          this.$snackbar.open({
+          this.$buefy.snackbar.open({
             message: "You have declined the details of this trade. All trade participants will be informed",
             type: "is-light",
             position: "is-top-right"
@@ -213,7 +213,7 @@ export default {
           return resp.data.response;
         })
         .catch(err => {
-          this.$snackbar.open({
+          this.$buefy.snackbar.open({
             message: "Something went wrong. Please refresh the page and try again, or contact your commissioner.",
             type: "is-warning",
             position: "is-top-right"

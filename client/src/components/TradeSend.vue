@@ -123,7 +123,7 @@ export default {
       this.$http.post(`/tradebot/postTrade`, {trades: this.trades, sender: this.$route.params.sender})
         .then(resp => {
           console.log(resp);
-          this.$snackbar.open({
+          this.$buefy.snackbar.open({
             message: "Trade has been sent to the announcements channel in slack!",
             type: "is-light",
             position: "is-top-right"
@@ -134,7 +134,7 @@ export default {
           return resp.data.response;
         })
         .catch(err => {
-          this.$snackbar.open({
+          this.$buefy.snackbar.open({
             message: "Something went wrong. Please refresh the page and try again, or contact your commissioner.",
             type: "is-warning",
             position: "is-top-right"

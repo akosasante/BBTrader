@@ -66,7 +66,7 @@ export default {
       this.loading = true;
       this.$http.post(`/mailer/tradeRequest`, [TradeStore.data, this.selectedPlayers])
         .then(resp => {
-          this.$snackbar.open({
+          this.$buefy.snackbar.open({
             message: "Trade has been requested and emails sent to the other participants!",
             type: "is-light",
             position: "is-top-right"
@@ -77,7 +77,7 @@ export default {
           console.log(resp);
         })
         .catch(err => {
-          this.$snackbar.open({
+          this.$buefy.snackbar.open({
             message: "Something went wrong. Please try again, or contact your commissioner.",
             type: "is-warning",
             position: "is-top-right"

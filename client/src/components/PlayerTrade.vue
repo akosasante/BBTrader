@@ -135,7 +135,7 @@ export default {
         this.players.push(trade);
         updateSavedData(this.player, "players", this.players);
       } else {
-        return this.$snackbar.open({
+        return this.$buefy.snackbar.open({
           message: "Please select the recipient of this player",
           type: 'is-warning',
           position: 'is-top-right'
@@ -153,7 +153,7 @@ export default {
         this.prospects.push(trade);
         updateSavedData(this.player, "prospects", this.prospects);
       } else {
-        return this.$snackbar.open({
+        return this.$buefy.snackbar.open({
           message: "Please select the recipient of this player",
           type: 'is-warning',
           position: 'is-top-right'
@@ -171,7 +171,7 @@ export default {
         this.picks.push(trade);
         updateSavedData(this.player, "picks", this.picks);
       } else {
-        return this.$snackbar.open({
+        return this.$buefy.snackbar.open({
           message: "Please select the recipient of this player",
           type: 'is-warning',
           position: 'is-top-right'

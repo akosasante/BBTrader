@@ -51,7 +51,7 @@ export default {
         submitRegistration() {
             this.loading = true;
             if(!(this.$refs.email.isValid)) {
-                this.$snackbar.open({
+                this.$buefy.snackbar.open({
                     message: "Invalid email format. Please fix before submitting",
                     type: "is-warning",
                     position: "is-top-right"
@@ -59,7 +59,7 @@ export default {
                 this.loading = false;
                 return null;
             } else if(this.password !== this.repeatPass) {
-                this.$snackbar.open({
+                this.$buefy.snackbar.open({
                     message: "Password fields do not match. Please fix before submitting",
                     type: "is-warning",
                     position: "is-top-right"
@@ -69,7 +69,7 @@ export default {
             } else {
                 this.$http.post('/auth/signup', { email: this.email, password: this.password })
                     .then(resp => {
-                        this.$snackbar.open({
+                        this.$buefy.snackbar.open({
                             message: "Thanks for registering. Logging you in automatically",
                             type: "is-light",
                             position: "is-top-right"
@@ -90,7 +90,7 @@ export default {
                     .catch(err => {
                         console.log(err.response);
                         const msg = err.response.status === 500 ? err.response.data.error : "Please contact the commissioner";
-                        this.$snackbar.open({
+                        this.$buefy.snackbar.open({
                             message: `Something went wrong. ${msg}`,
                             type: "is-warning",
                             position: "is-top-right"

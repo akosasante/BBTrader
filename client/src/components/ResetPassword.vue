@@ -57,7 +57,7 @@ export default {
             })
             .catch(err => {
                 const msg = err.response.status === 500 ? err.response.data.error : "Please contact the commissioner";
-                this.$snackbar.open({
+                this.$buefy.snackbar.open({
                     message: `Something went wrong. ${msg}`,
                     type: 'is-warning',
                     position: 'is-top-right'
@@ -68,7 +68,7 @@ export default {
     methods: {
         sendPassReset() {
             if(!(this.$refs.email.isValid)) {
-                this.$snackbar.open({
+                this.$buefy.snackbar.open({
                     message: "Invalid email format. Please fix before submitting",
                     type: "is-warning",
                     position: "is-top-right"
@@ -78,7 +78,7 @@ export default {
             } else {
                 this.$http.post('/auth/forgot', {email: this.email})
                     .then(resp => {
-                        this.$snackbar.open({
+                        this.$buefy.snackbar.open({
                             message: `Sent a password reset link to ${this.email}`,
                             type: "is-light",
                             position: "is-top-right"
@@ -89,7 +89,7 @@ export default {
                     .catch(err => {
                         const msg = err.response.status === 500 ? err.response.data.error : "Please contact the commissioner";
                         console.log(err.response);
-                        this.$snackbar.open({
+                        this.$buefy.snackbar.open({
                             message:`Something went wrong. ${msg}`,
                             type: "is-warning",
                             position: "is-top-right"
@@ -101,7 +101,7 @@ export default {
         submitNewPass() {
             this.loading = true;
             if(this.password !== this.repeatPass) {
-                this.$snackbar.open({
+                this.$buefy.snackbar.open({
                     message: "Password fields do not match. Please fix before submitting",
                     type: "is-warning",
                     position: "is-top-right"
@@ -111,7 +111,7 @@ export default {
             } else {
                 this.$http.post(`/auth/reset/${this.token}`, { password: this.password })
                     .then(resp => {
-                        this.$snackbar.open({
+                        this.$buefy.snackbar.open({
                             message: "Your password has been reset. Logging you in automattically.",
                             type: "is-light",
                             position: "is-top-right"
@@ -125,7 +125,7 @@ export default {
                     .catch(err => {
                         const msg = err.response.status === 500 ? err.response.data.error : "Please contact the commissioner";
                         console.log(err.response);
-                        this.$snackbar.open({
+                        this.$buefy.snackbar.open({
                             message: `Something went wrong. ${msg}`,
                             type: "is-warning",
                             position: "is-top-right"

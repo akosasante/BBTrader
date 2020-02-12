@@ -55,7 +55,7 @@ export default {
     },
     created() {
         if(getCurrUser()) {
-            this.$snackbar.open({
+            this.$buefy.snackbar.open({
                 message: "Welcome back.",
                 type: "is-light",
                 position: "is-top-right"
@@ -66,7 +66,7 @@ export default {
     methods: {
         sendPassReset() {
             if(!(this.$refs.email.isValid)) {
-                this.$snackbar.open({
+                this.$buefy.snackbar.open({
                     message: "Invalid email format. Please fix before submitting",
                     type: "is-warning",
                     position: "is-top-right"
@@ -75,7 +75,7 @@ export default {
             } else {
                 this.$http.post('/auth/forgot', {email: this.email})
                     .then(resp => {
-                        this.$snackbar.open({
+                        this.$buefy.snackbar.open({
                             message: `Sent a password reset link to ${this.email}`,
                             type: "is-light",
                             position: "is-top-right"
@@ -85,7 +85,7 @@ export default {
                     .catch(err => {
                         console.log(err.response);
                         const msg = err.response.status === 500 ? err.response.data.error : "Please contact the commissioner";
-                        this.$snackbar.open({
+                        this.$buefy.snackbar.open({
                             message: `Something went wrong. ${msg}`,
                             type: "is-warning",
                             position: "is-top-right"
@@ -96,7 +96,7 @@ export default {
         submitRegistration() {
             this.loading = true;
             if(!(this.$refs.email.isValid)) {
-                this.$snackbar.open({
+                this.$buefy.snackbar.open({
                     message: "Invalid email format. Please fix before submitting",
                     type: "is-warning",
                     position: "is-top-right"
@@ -106,7 +106,7 @@ export default {
             } else {
                 this.$http.post('/auth/login', { email: this.email, password: this.password })
                     .then(resp => {
-                        this.$snackbar.open({
+                        this.$buefy.snackbar.open({
                             message: "Logged in successfully.",
                             type: "is-light",
                             position: "is-top-right"
@@ -128,7 +128,7 @@ export default {
                     .catch(err => {
                         if(err) {
                             const msg = err.response.status === 500 ? err.response.data.error : "Please contact the commissioner";
-                            this.$snackbar.open({
+                            this.$buefy.snackbar.open({
                                 message: `Something went wrong. ${msg}`,
                                 type: "is-warning",
                                 position: "is-top-right"
