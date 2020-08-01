@@ -3,9 +3,14 @@
 const slackbotRouter = require('express').Router();
 const slackbotController = require('./controller');
 const sheetApi = require('../tradesheet/ApiClient');
+const {sendTradeMessage} = require('./new_slackbot');
 
 slackbotRouter.route('/postTrade')
     .post((req, res) => {
+        sendTradeMessage(req.body)
+            .then(slackRes => console.log(`RESULT FROM NEW SLACKBOT: ${JSON.stringify(slackRes)}`))
+            .catch(slackErr => console.error(`ERROR FROM NEW SLACKBOT: ${JSON.stringify(slackErr)}`));
+
         slackbotController.sendTradeMessage(req.body, (err, result) => {
             if (!err) {
                 const sheetClient = new sheetApi();

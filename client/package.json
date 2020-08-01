@@ -11,7 +11,7 @@
   "dependencies": {
     "axios": "^0.18.1",
     "buefy": "^0.8.10",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mdi": "^2.0.46",
     "node-gyp": "^6.1.0",
     "storage-available": "^1.0.0",
