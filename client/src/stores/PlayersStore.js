@@ -18,7 +18,7 @@ export default {
         "__v": 0,
         "name": "Flex Fox",
         "username": "flex.fox",
-        "email": "adamlee380@hotmail.com",
+        "email": "fakeflexfox@gmail.com",
         "userId": "U0S09K0JE",
         "password": "$2a$08$c909SLh8vhROyFzoxnNXoubitRVJyX3GBMOAtlkVSXIhH8f.00Ag6"
     },
