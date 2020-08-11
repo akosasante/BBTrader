@@ -169,15 +169,19 @@ module.exports.declineTrade = function (data, cb) {
 
 module.exports.getAllTrades = function (cb) {
     const populateOpts = [
-        { path: 'players.rec', model: 'Player' },
-        { path: 'prospects.rec', model: 'Player' },
-        { path: 'picks.rec', model: 'Player' },
         { path: 'sender', model: 'Player' },
+        { path: 'recipients.recipient', model: 'Player' },
+        { path: 'declined.by', model: 'Player' },
+        { path: 'trades', model: 'Trade' },
+        { path: 'trades.players.rec', model: 'Player' },
+        { path: 'trades.prospects.rec', model: 'Player' },
+        { path: 'trades.picks.rec', model: 'Player' },
+        { path: 'trades.sender', model: 'Player' },
     ];
-    Trade.find().then(async results => {
+    TradeEmails.find().then(async results => {
         try {
             console.log(results);
-            const fullTrades = await Trade.populate(results, populateOpts);
+            const fullTrades = await TradeEmails.populate(results, populateOpts);
             console.log(fullTrades);
             cb(null, fullTrades);
         } catch(error) {
