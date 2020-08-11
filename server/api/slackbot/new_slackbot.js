@@ -193,5 +193,5 @@ async function getText(data) {
 module.exports.sendTradeMessage = async function(data) {
     const textToSend = await getText(data);
     await webhook.send(textToSend);
-    return 'this is a hack';
+    return textToSend;
 };
