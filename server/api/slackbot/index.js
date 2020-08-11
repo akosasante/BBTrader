@@ -50,9 +50,11 @@ slackbotRouter.route('/postTrade')
 
 slackbotRouter.route('/postSheetsOnly')
     .post(async (req, res) => {
+        console.log(req.body);
         const sheetClient = new sheetApi();
         await sheetClient.getSheetsClient();
         const tradeObjs = req.body.trades.map(id => Trade.findById(id).exec());
+        console.log(tradeObjs);
         const tradesByRecipient = getTradeDataForSheets(tradeObjs);
         const recipients = Object.keys(tradesByRecipient);
         const trades = recipients.map(recip => [
