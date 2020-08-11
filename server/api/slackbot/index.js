@@ -53,7 +53,7 @@ slackbotRouter.route('/postSheetsOnly')
         console.log(req.body);
         const sheetClient = new sheetApi();
         await sheetClient.getSheetsClient();
-        const tradeObjs = req.body.trades.map(async id => await Trade.findById(id).exec());
+        const tradeObjs = await Promise.all(req.body.trades.map(id => Trade.findById(id).exec()));
         console.log(tradeObjs);
         const tradesByRecipient = getTradeDataForSheets(tradeObjs);
         const recipients = Object.keys(tradesByRecipient);
