@@ -44,4 +44,15 @@ modelRouter.route('/checkTradeValid')
         });
     });
 
+modelRouter.route('/tradeHistory')
+    .get((req, res) => {
+        modelController.getAllTrades((err, result) => {
+            if(!err) {
+                res.json({result});
+            } else {
+                res.status(500).send({message: 'Something went wrong, please contact admin', error: err});
+            }
+        });
+    });
+
 module.exports = modelRouter;

@@ -113,7 +113,7 @@ module.exports.updateConfirmation = function(data, cb) {
         if(allUpdated) {
             try {
                 let email = await emailController.sendValidationEmail(result.sender, tradeIds, data.trades);
-                console.log('\x1b[43m', 'VALIDATION EMAIL SENT');
+                console.log('\x1b[43m', 'VALIDATION EMAIL SENT', email);
             } catch(err) {
                 console.log(err);
             }
@@ -155,12 +155,35 @@ module.exports.declineTrade = function (data, cb) {
             recipients.push(result.sender);
             console.log('RECIPS', recipients);
             let email = await emailController.sendDeclineEmail(recipients, data.trades, result, data.reason);
-            console.log('\x1b[43m', 'Declination EMAIL SENT');
+            console.log('\x1b[43m', 'Declination EMAIL SENT', email);
         } catch(err) {
             console.log(err);
             throw err;
         }
         cb(null, result);
+    }).catch(err => {
+        console.log(err);
+        cb(err);
+    });
+};
+
+module.exports.getAllTrades = function (cb) {
+    const populateOpts = [
+        { path: 'players.rec', model: 'Player' },
+        { path: 'prospects.rec', model: 'Player' },
+        { path: 'picks.rec', model: 'Player' },
+        { path: 'sender', model: 'Player' },
+    ];
+    Trade.find().then(async results => {
+        try {
+            console.log(results);
+            const fullTrades = await Trade.populate(results, populateOpts);
+            console.log(fullTrades);
+            cb(null, fullTrades);
+        } catch(error) {
+            console.log(error);
+            cb(error);
+        }
     }).catch(err => {
         console.log(err);
         cb(err);
