@@ -9,23 +9,23 @@ const _ = require('lodash');
 const inverseMembersMap = require('../../config/members').nameToId;
 const moment = require('moment');
 
-module.exports.getTrade = function(data, cb) {
+module.exports.getTrade = function (data, cb) {
     const tradeIds = _.values(data).map(id => mongoose.mongo.ObjectId(id));
     const populateOpts = [
-        { path: 'players.rec', model: 'Player' },
-        { path: 'prospects.rec', model: 'Player' },
-        { path: 'picks.rec', model: 'Player' },
-        { path: 'sender', model: 'Player' },
+        {path: 'players.rec', model: 'Player'},
+        {path: 'prospects.rec', model: 'Player'},
+        {path: 'picks.rec', model: 'Player'},
+        {path: 'sender', model: 'Player'},
     ];
     console.log(tradeIds);
     Trade.find({
-        '_id': { $in : tradeIds }
+        '_id': {$in: tradeIds}
     }).then(async results => {
         try {
             const fullTrades = await Trade.populate(results, populateOpts);
             console.log(fullTrades);
             cb(null, fullTrades);
-        } catch(error) {
+        } catch (error) {
             console.log(error);
             cb(error);
         }
@@ -34,7 +34,7 @@ module.exports.getTrade = function(data, cb) {
         cb(err);
     });
 };
-module.exports.getUsername = function(userId) {
+module.exports.getUsername = function (userId) {
     return Player.findById(userId, {username: true})
         .then(result => {
             return result;
@@ -45,7 +45,7 @@ module.exports.getUsername = function(userId) {
         });
 };
 
-module.exports.getEmail = function(userId) {
+module.exports.getEmail = function (userId) {
     console.log(userId);
     return Player.findById(userId)
         .then(result => {
@@ -58,7 +58,7 @@ module.exports.getEmail = function(userId) {
         });
 };
 
-module.exports.getUserId = function(playerId) {
+module.exports.getUserId = function (playerId) {
     return Player.findById(playerId, {userId: true})
         .then(result => {
             return result;
@@ -69,7 +69,7 @@ module.exports.getUserId = function(playerId) {
         });
 };
 
-module.exports.getNameOfUser = function(playerId) {
+module.exports.getNameOfUser = function (playerId) {
     return Player.findById(playerId, {name: true})
         .then(result => {
             return result;
@@ -80,15 +80,18 @@ module.exports.getNameOfUser = function(playerId) {
         });
 };
 
-module.exports.getRecipients = function(tradesArr) {
+module.exports.getRecipients = function (tradesArr) {
     const tradeIds = tradesArr.map(trade => mongoose.mongo.ObjectId(trade._id));
 
     return TradeEmails.findOne({trades: tradeIds}, {recipients: true})
         .then(async result => {
             try {
-                const usernameList = await TradeEmails.populate(result, {path: 'recipients.recipient', model: 'Player'});
+                const usernameList = await TradeEmails.populate(result, {
+                    path: 'recipients.recipient',
+                    model: 'Player'
+                });
                 return usernameList.recipients;
-            } catch(error) {
+            } catch (error) {
                 console.log(error);
                 return null;
             }
@@ -100,21 +103,24 @@ module.exports.getRecipients = function(tradesArr) {
 };
 
 //data = {tradeIds: [ObjectIds], recipient: String}
-module.exports.updateConfirmation = function(data, cb) {
+module.exports.updateConfirmation = function (data, cb) {
     const tradeIds = (data.trades).map(trade => mongoose.mongo.ObjectId(trade._id));
     const recipientId = inverseMembersMap[data.recip];
 
-    TradeEmails.findOneAndUpdate({trades: tradeIds, 'recipients.recipient': recipientId}, {$set: {'recipients.$.confirmed': true}}, {'new': true}).then(async result => {
+    TradeEmails.findOneAndUpdate({
+        trades: tradeIds,
+        'recipients.recipient': recipientId
+    }, {$set: {'recipients.$.confirmed': true}}, {'new': true}).then(async result => {
         console.log('\x1b[42m', 'RESULT: ', result);
         const allUpdated = result.recipients.every(elem => {
             return elem.confirmed;
         });
 
-        if(allUpdated) {
+        if (allUpdated) {
             try {
                 let email = await emailController.sendValidationEmail(result.sender, tradeIds, data.trades);
                 console.log('\x1b[43m', 'VALIDATION EMAIL SENT', email);
-            } catch(err) {
+            } catch (err) {
                 console.log(err);
             }
         }
@@ -125,17 +131,17 @@ module.exports.updateConfirmation = function(data, cb) {
     });
 };
 
-module.exports.checkTradeValid = function(data, cb) {
+module.exports.checkTradeValid = function (data, cb) {
     const tradeIds = (data.trades).map(trade => mongoose.mongo.ObjectId(trade._id));
     const recipientId = inverseMembersMap[data.recip];
 
     TradeEmails.findOne({trades: tradeIds, 'recipients.recipient': recipientId})
         .then(result => {
             console.log('x1b[44m', 'Expiry Result: ', result);
-            if(moment() > result.expiry) {
+            if (moment() > result.expiry) {
                 console.log('EXPIRED TRADE');
                 cb({reason: 'Expired', err: result.expiry});
-            } else if(result.declined.status) {
+            } else if (result.declined.status) {
                 console.log('DECLINED TRADE');
                 cb({reason: 'Declined', err: result.declined});
             } else {
@@ -148,7 +154,10 @@ module.exports.declineTrade = function (data, cb) {
     const tradeIds = (data.trades).map(trade => mongoose.mongo.ObjectId(trade._id));
     const recipientId = inverseMembersMap[data.recip];
 
-    TradeEmails.findOneAndUpdate({trades: tradeIds, 'recipients.recipient': recipientId}, {$set: {'declined.status': true, 'declined.by': recipientId}}, {'new': true}).then(async result => {
+    TradeEmails.findOneAndUpdate({
+        trades: tradeIds,
+        'recipients.recipient': recipientId
+    }, {$set: {'declined.status': true, 'declined.by': recipientId}}, {'new': true}).then(async result => {
         console.log('\x1b[42m', 'DECLINE RESULT: ', result);
         try {
             let recipients = result.recipients.map(recip => recip.recipient);
@@ -156,7 +165,7 @@ module.exports.declineTrade = function (data, cb) {
             console.log('RECIPS', recipients);
             let email = await emailController.sendDeclineEmail(recipients, data.trades, result, data.reason);
             console.log('\x1b[43m', 'Declination EMAIL SENT', email);
-        } catch(err) {
+        } catch (err) {
             console.log(err);
             throw err;
         }
@@ -168,28 +177,27 @@ module.exports.declineTrade = function (data, cb) {
 };
 
 module.exports.getAllTrades = function (cb) {
-    const populateOpts = [
-        { path: 'sender', model: 'Player' },
-        { path: 'recipients.recipient', model: 'Player' },
-        { path: 'declined.by', model: 'Player' },
-        { path: 'trades', model: 'Trade' },
-        { path: 'trades.players.rec', model: 'Player' },
-        { path: 'trades.prospects.rec', model: 'Player' },
-        { path: 'trades.picks.rec', model: 'Player' },
-        { path: 'trades.sender', model: 'Player' },
-    ];
-    TradeEmails.find().then(async results => {
-        try {
-            console.log(results);
-            const fullTrades = await TradeEmails.populate(results, populateOpts);
-            console.log(fullTrades);
-            cb(null, fullTrades);
-        } catch(error) {
-            console.log(error);
-            cb(error);
-        }
-    }).catch(err => {
-        console.log(err);
-        cb(err);
-    });
+    const rootPopulateOpts = {
+        path: 'sender recipients.recipient declined.by',
+    };
+    const tradePopuateOpts = {
+        path: 'trades',
+        populate: { path: 'players.rec prospects.rec picks.rec sender'}
+    };
+    TradeEmails
+        .find()
+        .populate(rootPopulateOpts)
+        .populate(tradePopuateOpts)
+        .then(async results => {
+            try {
+                console.log(results);
+                cb(null, results);
+            } catch (error) {
+                console.log(error);
+                cb(error);
+            }
+        }).catch(err => {
+            console.log(err);
+            cb(err);
+        });
 };
