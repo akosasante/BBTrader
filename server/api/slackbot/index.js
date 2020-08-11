@@ -4,7 +4,7 @@ const slackbotRouter = require('express').Router();
 // const slackbotController = require('./controller');
 const sheetApi = require('../tradesheet/ApiClient');
 const {sendTradeMessage} = require('./new_slackbot');
-const Trade = require('./trade');
+const Trade = require('../schemas/trade');
 
 slackbotRouter.route('/postTrade')
     .post((req, res) => {
