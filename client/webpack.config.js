@@ -4,6 +4,16 @@ const TerserPlugin = require('terser-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
+  plugins: [
+      new VueLoaderPlugin(),
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: '"development"',
+          V2_API_URL: '"http://127.0.0.1:3000"',
+          USE_V2_API: true
+        }
+      }),
+  ],
   mode: 'production',
   entry: ['./src/main.js'],
   output: {
@@ -76,12 +86,14 @@ if (process.env.NODE_ENV === 'production') {
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"production"'
+        NODE_ENV: '"production"',
+        V2_API_URL: '"https://newtrades.api.akosua.xyz"',
+        USE_V2_API: true
       }
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
     }),
-    new VueLoaderPlugin(),
+    // new VueLoaderPlugin(),
   ])
 }

@@ -15,15 +15,15 @@
     <p v-else>None</p>
     <h3 style="margin-bottom: 0.5rem; margin-top:0.75rem;"><strong>Picks:</strong></h3>
     <div v-if="trade.picks && trade.picks.length">
-      <p v-if="picksByType[trade._id].major && picksByType[trade._id].major.length">
+      <p v-if="picksByType[trade._id] && picksByType[trade._id].major && picksByType[trade._id].major.length">
         <span><strong>Major League Picks:</strong> <br></span>
         <span class="tab-left" v-for="pick in picksByType[trade._id].major"><em>Round </em>{{pick.round}}, {{pick.pick}}'s pick <em>to </em> {{pick.rec.name}} <br></span>
       </p>
-      <p v-if="picksByType[trade._id].high && picksByType[trade._id].high.length">
+      <p v-if="picksByType[trade._id] && picksByType[trade._id].high && picksByType[trade._id].high.length">
         <span><strong>High Minor Picks:</strong> <br></span>
         <span class="tab-left" v-for="pick in picksByType[trade._id].high"><em>Round </em>{{pick.round}}, {{pick.pick}}'s pick <em>to </em> {{pick.rec.name}} <br></span>
       </p>
-      <p v-if="picksByType[trade._id].low && picksByType[trade._id].low.length">
+      <p v-if="picksByType[trade._id] && picksByType[trade._id].low && picksByType[trade._id].low.length">
         <span><strong>Low Minor Picks:</strong> <br></span>
         <span class="tab-left" v-for="pick in picksByType[trade._id].low"><em>Round </em>{{pick.round}}, {{pick.pick}}'s pick <em>to </em> {{pick.rec.name}} <br></span>
       </p>
@@ -108,6 +108,7 @@ export default {
   data() {
     return {
       trades: example,
+      fromV2Endpoint: false,
       recipient: this.$route.params.recipient,
       loadingComplete: false,
       errorLoading: false,
@@ -129,40 +130,53 @@ export default {
       picksByType: {},
     };
   },
-  created() {
-    const promisedTrades = fetchTrade.bind(this, this.$route.query);
-    promisedTrades().then(result => {
-      if(result) {
-        this.trades = result;
+  async created() {
+    if (process.env.USE_V2_API) {
+      this.fromV2Endpoint = true
+      console.log('got trade from new trade machine')
+      const {data: resp} = await this.$http.get(`${process.env.V2_API_URL}/trades/v1/${this.recipient}`)
+      if (resp) {
+        this.trades = resp
         this.picksByType = this.getPicksByType(this.trades);
-        return Promise.resolve(result);
       }
-      this.picksByType = this.getPicksByType(this.trades);
-    }).then(result => {
-      this.$http.post(`/models/checkTradeValid`, {recip: this.recipient, trades: result})
-        .then(resp => {
-          console.log(resp);
-        })
-        .catch(err => {
-          if (err) {
-            let msg = err && err.response && err.response.data && err.response.data.error;
-            if (msg && err.response.data.error.reason === "Expired") {
-              msg = "This trade has expired, you cannot accept/decline it anymore";
-              // msg = err.response.data.error.reason === "Expired" ?
-              //         "This trade has expired, you cannot accept/decline it anymore" : "This trade was declined; it is no longer valid";
-              this.expired = true;
-            }
-            return this.$buefy.snackbar.open({
-              message: msg,
-              type: "is-warning",
-              position: "is-top-right"
-            });
-            console.log(err.response)
-          }
-        });
-    });
+    } else {
+      this.getV1Trades()
+    }
   },
   methods: {
+    getV1Trades() {
+      const promisedTrades = fetchTrade.bind(this, this.$route.query);
+      promisedTrades().then(result => {
+        if(result) {
+          this.trades = result;
+          this.picksByType = this.getPicksByType(this.trades);
+          return Promise.resolve(result);
+        }
+        this.picksByType = this.getPicksByType(this.trades);
+      }).then(result => {
+        this.$http.post(`/models/checkTradeValid`, {recip: this.recipient, trades: result})
+            .then(resp => {
+              console.log(resp);
+            })
+            .catch(err => {
+              if (err) {
+                let msg = err && err.response && err.response.data && err.response.data.error;
+                if (msg && err.response.data.error.reason === "Expired") {
+                  msg = "This trade has expired, you cannot accept/decline it anymore";
+                  // msg = err.response.data.error.reason === "Expired" ?
+                  //         "This trade has expired, you cannot accept/decline it anymore" : "This trade was declined; it is no longer valid";
+                  this.expired = true;
+                }
+                return this.$buefy.snackbar.open({
+                  message: msg,
+                  type: "is-warning",
+                  position: "is-top-right"
+                });
+                console.log(err.response)
+              }
+            });
+      });
+    },
     confirmTrade() {
       this.loading = true;
       const confirmationData = { recip: this.recipient, trades: this.trades };
@@ -232,11 +246,13 @@ export default {
         obj[pick.type] = (obj[pick.type] || []).concat(pick);
         return obj;
       }, {});
+
       const picks = trades.reduce((obj, trade) => {
         const id = trade["_id"];
         obj[id] = createPickObject(trade.picks);
         return obj;
       }, {});
+      console.dir(picks)
       return picks;
     }
   }
