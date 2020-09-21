@@ -64,29 +64,59 @@ export default {
     submitTrade() {
       // console.log(TradeStore.data)
       this.loading = true;
+      if (process.env.USE_V2_API) {
+        console.log('submitting trade to new trade machine')
+        this.$http.post(`${process.env.V2_API_URL}/trades/v1/submit`, [TradeStore.data, this.selectedPlayers])
+            .then(resp => {
+              this.$buefy.snackbar.open({
+                message: "Trade has been requested and emails sent to the other participants!",
+                type: "is-light",
+                position: "is-top-right"
+              });
+              this.loading = false;
+              this.loadingComplete = true;
+              this.successLoading = true;
+              console.log(resp);
+            })
+            .catch(err => {
+              this.$buefy.snackbar.open({
+                message: "Something went wrong. Please try again, or contact your commissioner.",
+                type: "is-warning",
+                position: "is-top-right"
+              });
+              this.loading = false;
+              this.loadingComplete = true;
+              this.errorLoading = true;
+              console.error(err);
+            });
+      } else {
+        this.submitToV1()
+      }
+    },
+    submitToV1() {
       this.$http.post(`/mailer/tradeRequest`, [TradeStore.data, this.selectedPlayers])
-        .then(resp => {
-          this.$buefy.snackbar.open({
-            message: "Trade has been requested and emails sent to the other participants!",
-            type: "is-light",
-            position: "is-top-right"
+          .then(resp => {
+            this.$buefy.snackbar.open({
+              message: "Trade has been requested and emails sent to the other participants!",
+              type: "is-light",
+              position: "is-top-right"
+            });
+            this.loading = false;
+            this.loadingComplete = true;
+            this.successLoading = true;
+            console.log(resp);
+          })
+          .catch(err => {
+            this.$buefy.snackbar.open({
+              message: "Something went wrong. Please try again, or contact your commissioner.",
+              type: "is-warning",
+              position: "is-top-right"
+            });
+            this.loading = false;
+            this.loadingComplete = true;
+            this.errorLoading = true;
+            console.error(err);
           });
-          this.loading = false;
-          this.loadingComplete = true;
-          this.successLoading = true;
-          console.log(resp);
-        })
-        .catch(err => {
-          this.$buefy.snackbar.open({
-            message: "Something went wrong. Please try again, or contact your commissioner.",
-            type: "is-warning",
-            position: "is-top-right"
-          });
-          this.loading = false;
-          this.loadingComplete = true;
-          this.errorLoading = true;
-          console.error(err);
-        });
     }
   },
   computed: {
