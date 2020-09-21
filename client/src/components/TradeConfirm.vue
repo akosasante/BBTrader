@@ -184,7 +184,8 @@ export default {
     confirmTrade() {
       this.loading = true;
       const confirmationData = { recip: this.recipient, trades: this.trades };
-      this.$http.post(`/models/updateConfirmation`, confirmationData)
+      const url = process.env.USE_V2_API ? `${process.env.V2_API_URL}/trades/v1/accept/${this.tradeId}` : `/models/updateConfirmation`
+      this.$http.post(url, confirmationData)
         .then(resp => {
           console.log(resp);
           this.$buefy.snackbar.open({
