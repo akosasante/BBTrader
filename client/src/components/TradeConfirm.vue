@@ -128,13 +128,17 @@ export default {
         {key: "low", display: "Low Minors"}
       ],
       picksByType: {},
+      tradeId: ""
     };
   },
   async created() {
     if (process.env.USE_V2_API) {
       this.fromV2Endpoint = true
       console.log('got trade from new trade machine')
-      const {data: resp} = await this.$http.get(`${process.env.V2_API_URL}/trades/v1/${this.recipient}`)
+      const split = this.recipient.split("_")
+      this.tradeId = split[0]
+      this.recipient = split[1]
+      const {data: resp} = await this.$http.get(`${process.env.V2_API_URL}/trades/v1/${this.tradeId}`)
       if (resp) {
         this.trades = resp
         this.picksByType = this.getPicksByType(this.trades);
@@ -211,7 +215,8 @@ export default {
     declineTrade() {
       this.loadingDecline = true;
       const declinationData = { recip: this.recipient, trades: this.trades, reason: this.declineReason };
-      this.$http.post(`/models/declineTrade`, declinationData)
+      const url = process.env.USE_V2_API ? `${process.env.V2_API_URL}/trades/v1/reject/${this.tradeId}` : `/models/declineTrade`
+      this.$http.post(url, declinationData)
         .then(resp => {
           console.log(resp);
           this.$buefy.snackbar.open({
