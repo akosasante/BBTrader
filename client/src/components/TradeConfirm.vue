@@ -108,7 +108,6 @@ export default {
   data() {
     return {
       trades: example,
-      fromV2Endpoint: false,
       recipient: this.$route.params.recipient,
       loadingComplete: false,
       errorLoading: false,
@@ -133,7 +132,6 @@ export default {
   },
   async created() {
     if (process.env.USE_V2_API) {
-      this.fromV2Endpoint = true
       console.log('got trade from new trade machine')
       const split = this.recipient.split("_")
       this.tradeId = split[0]

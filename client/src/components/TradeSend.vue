@@ -15,15 +15,15 @@
     <p v-else>None</p>
     <h3 style="margin-bottom: 0.5rem; margin-top:0.75rem;"><strong>Picks:</strong></h3>
     <div v-if="trade.picks && trade.picks.length">
-      <p v-if="picksByType[trade._id].major && picksByType[trade._id].major.length">
+      <p v-if="picksByType[trade._id] && picksByType[trade._id].major && picksByType[trade._id].major.length">
         <span><strong>Major League Picks:</strong> <br></span>
         <span class="tab-left" v-for="pick in picksByType[trade._id].major"><em>Round </em>{{pick.round}}, {{pick.pick}}'s pick <em>to </em> {{pick.rec.name}} <br></span>
       </p>
-      <p v-if="picksByType[trade._id].high && picksByType[trade._id].high.length">
+      <p v-if="picksByType[trade._id] && picksByType[trade._id].high && picksByType[trade._id].high.length">
         <span><strong>High Minor Picks:</strong> <br></span>
         <span class="tab-left" v-for="pick in picksByType[trade._id].high"><em>Round </em>{{pick.round}}, {{pick.pick}}'s pick <em>to </em> {{pick.rec.name}} <br></span>
       </p>
-      <p v-if="picksByType[trade._id].low && picksByType[trade._id].low.length">
+      <p v-if="picksByType[trade._id] && picksByType[trade._id].low && picksByType[trade._id].low.length">
         <span><strong>Low Minor Picks:</strong> <br></span>
         <span class="tab-left" v-for="pick in picksByType[trade._id].low"><em>Round </em>{{pick.round}}, {{pick.pick}}'s pick <em>to </em> {{pick.rec.name}} <br></span>
       </p>
@@ -106,21 +106,35 @@ export default {
         {key: "low", display: "Low Minors"}
       ],
       picksByType: {},
+      sender: this.$route.params.sender
     };
   },
-  created() {
-    const promisedTrades = fetchTrade.bind(this, this.$route.query);
-        promisedTrades().then((result) => {
-          if(result) {
-            this.trades = result;
-          }
-          this.picksByType = this.getPicksByType(this.trades);
-        });
+  async created() {
+    if (process.env.USE_V2_API) {
+      console.log('got trade from new trade machine')
+      const split = this.$route.params.sender.split("_")
+      this.tradeId = split[0]
+      this.sender = split[1]
+      const {data: resp} = await this.$http.get(`${process.env.V2_API_URL}/trades/v1/${this.tradeId}`)
+      if (resp) {
+        this.trades = resp
+        this.picksByType = this.getPicksByType(this.trades);
+      }
+    } else {
+      const promisedTrades = fetchTrade.bind(this, this.$route.query);
+      promisedTrades().then((result) => {
+        if(result) {
+          this.trades = result;
+        }
+        this.picksByType = this.getPicksByType(this.trades);
+      });
+    }
   },
   methods: {
     sendToSlack() {
       this.loading = true;
-      this.$http.post(`/tradebot/postTrade`, {trades: this.trades, sender: this.$route.params.sender})
+      const url = process.env.USE_V2_API ? `${process.env.V2_API_URL}/trades/v1/send/${this.tradeId}` : "/tradebot/postTrade"
+      this.$http.post(url, {trades: this.trades, sender: this.sender})
         .then(resp => {
           console.log(resp);
           this.$buefy.snackbar.open({
