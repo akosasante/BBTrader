@@ -9,9 +9,9 @@ Communication takes place through the site, which will then send emails to the m
 
 To Do:
 ---
-- [ ] Add UI for admin tasks
-- [ ] UI refresh before 2018-2019 season
-- [ ] Respond to feedback/bugs/feature requeests submitted to Trello by league members
+- [x] Add UI for admin tasks
+- [ ] UI refresh before ~2018-2019~ ~2019-2020~ 2020-2021 (this time I've actually got a lot more done, so the goal should be reasonable 😅) season
+- [ ] Respond to feedback/bugs/feature requests submitted to Trello by league members
 
 (Far) Future Considerations:
 ---
